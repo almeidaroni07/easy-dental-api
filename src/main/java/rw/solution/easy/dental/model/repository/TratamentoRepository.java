@@ -12,5 +12,11 @@ public interface TratamentoRepository extends JpaRepository<Tratamento, Long> {
 	
 	@Query("SELECT tratamento FROM Tratamento tratamento WHERE tratamento.paciente.id = :pacienteID")
 	Tratamento getTratamentoByPacienteID(@Param("pacienteID") Long pacienteID);
+	
+	@Query("SELECT tratamento FROM Tratamento tratamento WHERE tratamento.id = :tratamentoID")
+	Tratamento getTratamentoByID(@Param("tratamentoID") Long tratamentoID);
+	
+	@Query("SELECT tratamento.assinatura FROM Tratamento tratamento WHERE tratamento.id = :tratamentoID")
+	byte[] getAssinaturaByID(@Param("tratamentoID") Long tratamentoID);
 
 }

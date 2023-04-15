@@ -4,6 +4,7 @@ public class Response {
 	
 	private boolean success;
 	private String message;
+	private Long cdResponse;
 	
 	public Response() {
 		// TODO Auto-generated constructor stub
@@ -13,6 +14,13 @@ public class Response {
 		super();
 		this.success = success;
 		this.message = message;
+	}
+
+	public Response(boolean success, String message, Long cdResponse) {
+		super();
+		this.success = success;
+		this.message = message;
+		this.cdResponse = cdResponse;
 	}
 
 	public boolean isSuccess() {
@@ -30,4 +38,13 @@ public class Response {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	public Long getCdResponse() {
+		return cdResponse;
+	}
+
+	public void setCdResponse(Long cdResponse) {
+		this.cdResponse = cdResponse;
+	}
+	
 }

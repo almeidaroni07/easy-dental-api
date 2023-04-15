@@ -10,6 +10,7 @@ public class AgendamentoDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = -44254502073402358L;
 	
+	private Long tratamentoID;
 	private Long agendamentoID;
 	private String procedimento;
 	private String paciente;
@@ -24,7 +25,7 @@ public class AgendamentoDTO implements Serializable{
 	}
 
 	public AgendamentoDTO(Long agendamentoID, String procedimento, String paciente, LocalDate data, String inicio,
-			String fim, String dataHoraInicio, String dataHoraFim) {
+			String fim, String dataHoraInicio, String dataHoraFim, Long tratamentoID) {
 		super();
 		this.agendamentoID = agendamentoID;
 		this.procedimento = procedimento;
@@ -34,6 +35,7 @@ public class AgendamentoDTO implements Serializable{
 		this.fim = fim;
 		this.dataHoraInicio = dataHoraInicio;
 		this.dataHoraFim = dataHoraFim;
+		this.tratamentoID = tratamentoID;
 	}
 
 	public Long getAgendamentoID() {
@@ -98,5 +100,13 @@ public class AgendamentoDTO implements Serializable{
 
 	public void setDataHoraFim(String dataHoraFim) {
 		this.dataHoraFim = dataHoraFim;
+	}
+
+	public Long getTratamentoID() {
+		return tratamentoID;
+	}
+
+	public void setTratamentoID(Long tratamentoID) {
+		this.tratamentoID = tratamentoID;
 	}
 }

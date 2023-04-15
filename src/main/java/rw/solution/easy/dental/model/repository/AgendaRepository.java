@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import rw.solution.easy.dental.model.Agenda;
 
 @Repository
-public interface AgendaRepository extends JpaRepository<Agenda, Long>   {
+public interface AgendaRepository extends JpaRepository<Agenda, Long> {
 	
 	@Query("SELECT agenda FROM Agenda agenda WHERE agenda.paciente.customer.id = :customerID")
 	List<Agenda> getAgendamentosHojeByPacienteID(@Param("customerID") Long customer);

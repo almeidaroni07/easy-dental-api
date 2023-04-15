@@ -53,6 +53,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/v2/api-docs/**").permitAll()
 		.antMatchers("/webjars/**").permitAll()
 		.antMatchers("/h2-console/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/tratamento/v1/assinatura/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/arquivo/v1/blob/**").permitAll()
 		.antMatchers(HttpMethod.POST, "/auth/login").permitAll()
 		.antMatchers(HttpMethod.GET, "/keepalive/status").permitAll()
 		.anyRequest().authenticated();

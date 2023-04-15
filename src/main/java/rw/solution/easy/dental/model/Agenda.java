@@ -44,6 +44,9 @@ public class Agenda implements Serializable {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "paciente_id", referencedColumnName = "id")
 	private Paciente paciente;
+	
+	@Column(name = "tratamento_id")
+	private Long tratamentoID;
 
 	@Column(name = "data_consulta")
 	@Convert(converter = LocalDateConverter.class)
@@ -69,7 +72,7 @@ public class Agenda implements Serializable {
 	}
 
 	public Agenda(Paciente paciente, LocalDate dataConsulta, String horaInicioConsulta, String horaFimConsulta,
-			StatusConsulta status, Procedimento procedimento) {
+			StatusConsulta status, Procedimento procedimento, Long tratamentoID) {
 		super();
 		this.paciente = paciente;
 		this.dataConsulta = dataConsulta;
@@ -77,6 +80,7 @@ public class Agenda implements Serializable {
 		this.horaFimConsulta = horaFimConsulta;
 		this.status = status;
 		this.procedimento = procedimento;
+		this.tratamentoID = tratamentoID;
 	}
 
 	public Long getId() {
@@ -135,6 +139,14 @@ public class Agenda implements Serializable {
 		this.procedimento = procedimento;
 	}
 
+	public Long getTratamentoID() {
+		return tratamentoID;
+	}
+
+	public void setTratamentoID(Long tratamentoID) {
+		this.tratamentoID = tratamentoID;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(dataConsulta, horaFimConsulta, horaInicioConsulta, id, paciente, procedimento, status);
@@ -174,7 +186,7 @@ public class Agenda implements Serializable {
 			stringFim = stringFim + ' ' +this.horaFimConsulta;
 			log.info(String.format(LogUtil.FORMATLOG, "getAgendamentoDTO", "paciente", "stringFim: "+stringFim));
 		
-			return new AgendamentoDTO(this.id, this.getProcedimento().getNome(), this.getPaciente().getNome(), this.getDataConsulta(),  this.horaInicioConsulta,  this.horaFimConsulta, stringInicio, stringFim);
+			return new AgendamentoDTO(this.id, this.getProcedimento().getNome(), this.getPaciente().getNome(), this.getDataConsulta(),  this.horaInicioConsulta,  this.horaFimConsulta, stringInicio, stringFim, this.tratamentoID);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
