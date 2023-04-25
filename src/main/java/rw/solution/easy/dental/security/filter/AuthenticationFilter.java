@@ -35,6 +35,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 		try {
 			
+			log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "token: "+token));
 			boolean valid = this.authenticationService.isTokenValid(token);
 			
 			if (valid) {
@@ -68,6 +69,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 		try {
 			String token = request.getHeader("Authorization");
+			log.info(String.format(LogUtil.FORMATLOG, "getToken", request.getRequestURI(), "token: "+token));
 			if (token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
 				return null;
 			}

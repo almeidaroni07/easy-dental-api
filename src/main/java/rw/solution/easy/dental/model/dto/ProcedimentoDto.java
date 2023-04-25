@@ -2,6 +2,7 @@ package rw.solution.easy.dental.model.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ProcedimentoDto implements Serializable {
 
@@ -46,5 +47,16 @@ public class ProcedimentoDto implements Serializable {
 	}
 	public void setProcedimentoNome(String procedimentoNome) {
 		this.procedimentoNome = procedimentoNome;
+	}
+	
+	public LocalDate getDataFormatada() {
+		try {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String dataStr = this.data.format(formatter);
+			return LocalDate.parse(dataStr, formatter);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return this.data;
 	}
 }

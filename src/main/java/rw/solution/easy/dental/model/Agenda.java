@@ -2,8 +2,6 @@ package rw.solution.easy.dental.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -22,6 +20,7 @@ import javax.persistence.Table;
 import org.apache.log4j.Logger;
 
 import rw.solution.easy.dental.model.convert.LocalDateConverter;
+import rw.solution.easy.dental.model.dto.AgendamentoCorDto;
 import rw.solution.easy.dental.model.dto.AgendamentoDTO;
 import rw.solution.easy.dental.model.enums.StatusConsulta;
 import rw.solution.easy.dental.util.LogUtil;
@@ -186,19 +185,15 @@ public class Agenda implements Serializable {
 			stringFim = stringFim + ' ' +this.horaFimConsulta;
 			log.info(String.format(LogUtil.FORMATLOG, "getAgendamentoDTO", "paciente", "stringFim: "+stringFim));
 		
-			return new AgendamentoDTO(this.id, this.getProcedimento().getNome(), this.getPaciente().getNome(), this.getDataConsulta(),  this.horaInicioConsulta,  this.horaFimConsulta, stringInicio, stringFim, this.tratamentoID);
+			return new AgendamentoDTO(this.id, this.getProcedimento().getNome(), this.getPaciente().getNome(), this.getDataConsulta(),  this.horaInicioConsulta,  this.horaFimConsulta, stringInicio, stringFim, this.tratamentoID, this.getAgendamentoCor(), this.getPaciente().getId());
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return null;
 	}
 	
-	public static void main(String[] args) {
-		String data = "31/03/2023 12:00";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime date = LocalDateTime.parse(data,formatter);
-
-        System.out.println(date);
+	private AgendamentoCorDto getAgendamentoCor() {
+		return new AgendamentoCorDto(this.getProcedimento().getCor(), "#FAE3E3");
 	}
-
+	
 }

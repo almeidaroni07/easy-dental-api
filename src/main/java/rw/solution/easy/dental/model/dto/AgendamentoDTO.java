@@ -12,6 +12,7 @@ public class AgendamentoDTO implements Serializable{
 	
 	private Long tratamentoID;
 	private Long agendamentoID;
+	private Long pacienteID;
 	private String procedimento;
 	private String paciente;
 	private LocalDate data;
@@ -19,13 +20,14 @@ public class AgendamentoDTO implements Serializable{
 	private String fim;
 	private String dataHoraInicio;
 	private String dataHoraFim;
+	private AgendamentoCorDto cor;
 	
 	public AgendamentoDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public AgendamentoDTO(Long agendamentoID, String procedimento, String paciente, LocalDate data, String inicio,
-			String fim, String dataHoraInicio, String dataHoraFim, Long tratamentoID) {
+			String fim, String dataHoraInicio, String dataHoraFim, Long tratamentoID, AgendamentoCorDto cor, Long pacienteID) {
 		super();
 		this.agendamentoID = agendamentoID;
 		this.procedimento = procedimento;
@@ -36,6 +38,8 @@ public class AgendamentoDTO implements Serializable{
 		this.dataHoraInicio = dataHoraInicio;
 		this.dataHoraFim = dataHoraFim;
 		this.tratamentoID = tratamentoID;
+		this.cor = cor;
+		this.pacienteID = pacienteID;
 	}
 
 	public Long getAgendamentoID() {
@@ -109,4 +113,22 @@ public class AgendamentoDTO implements Serializable{
 	public void setTratamentoID(Long tratamentoID) {
 		this.tratamentoID = tratamentoID;
 	}
+
+	public AgendamentoCorDto getCor() {
+		return cor;
+	}
+
+	public void setCor(AgendamentoCorDto cor) {
+		this.cor = cor;
+	}
+
+	public Long getPacienteID() {
+		return pacienteID;
+	}
+
+	public void setPacienteID(Long pacienteID) {
+		this.pacienteID = pacienteID;
+	}
+	
+	
 }

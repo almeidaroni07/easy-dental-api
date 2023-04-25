@@ -15,5 +15,8 @@ public interface AuthenticationRepository extends JpaRepository<User, Long> {
 	
 	@Query("SELECT user FROM User user WHERE user.username = :username ")
 	User getUserByUsername(@Param("username")String username);
+	
+	@Query("SELECT user.foto FROM User user WHERE user.id = :usuarioID ")
+	byte[] getFoto(@Param("usuarioID") Long usuarioID);
 
 }

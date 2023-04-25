@@ -53,13 +53,18 @@ public class User implements Serializable, UserDetails {
 	private String username;
 	@Column(name = "password")
 	private String password;
+	
+	@JsonIgnore
 	@Column(name = "status")
 	@Enumerated(EnumType.STRING)
 	private StatusUsuario status;
+	
+	@JsonIgnore
 	@Lob
 	@Column(name = "bl_foto", nullable = true)
 	private byte[] foto;
 	
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name = "role_id", referencedColumnName = "id")
     private List<Role> roles;

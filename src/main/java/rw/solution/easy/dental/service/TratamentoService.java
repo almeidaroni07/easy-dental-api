@@ -90,7 +90,7 @@ public class TratamentoService implements Serializable {
 			
 			
 			Procedimento procedimentoByID = this.procedimentoRepository.getProcedimentoByID(procedimento.getProcedimentoID());
-			this.agendaRepository.save(new Agenda(pacienteByID, procedimento.getData(), procedimento.getInicio(), procedimento.getFim(), StatusConsulta.MARCADO, procedimentoByID, save.getId()));
+			this.agendaRepository.save(new Agenda(pacienteByID, procedimento.getDataFormatada(), procedimento.getInicio(), procedimento.getFim(), StatusConsulta.MARCADO, procedimentoByID, save.getId()));
 			
 			this.tpRepository.save(new TratamentoProcedimento(new TratamentoProcedimentoPK(save.getId(), pacienteByID.getId()), procedimento.getProcedimentoNome()));
 			

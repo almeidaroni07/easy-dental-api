@@ -49,10 +49,13 @@ public class ArquivoService implements Serializable {
 
 	public Response updateArquivo(Long customer, Long arquivoID, MultipartFile blob) throws Exception {
 		
+		
 		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "updateArquivo", "arquivoID: "+arquivoID));
+		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "updateArquivo", "tipo arquivo: "+blob.getContentType()));
 		Arquivo arquivo = this.repository.getArquivoByID(arquivoID);
 		byte[] arquivoBytes = blob.getBytes();
 		arquivo.setArquivo(arquivoBytes);
+		arquivo.setTipo(blob.getContentType());
 		
 		this.repository.save(arquivo);
 		

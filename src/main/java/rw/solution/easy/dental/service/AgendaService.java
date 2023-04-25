@@ -1,6 +1,7 @@
 package rw.solution.easy.dental.service;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rw.solution.easy.dental.model.Agenda;
+import rw.solution.easy.dental.model.dto.AgendaDto;
 import rw.solution.easy.dental.model.dto.AgendamentoDTO;
 import rw.solution.easy.dental.model.repository.AgendaRepository;
 import rw.solution.easy.dental.util.LogUtil;
@@ -26,18 +28,24 @@ public class AgendaService implements Serializable {
 	@Autowired
 	private AgendaRepository repository;
 	
-	public List<AgendamentoDTO> getAgendamentosHojeByPacienteID(Long customer) throws Exception{
+	public AgendaDto getAgendamentos(Long customer) throws Exception{
 		
-		log.info(String.format(LogUtil.FORMATLOG, "getAvaliacaoAnamnese", "paciente", "customer: "+customer));
-		log.info(String.format(LogUtil.FORMATLOG, "getAvaliacaoAnamnese", "paciente", "Buscando os agendamento de hoje"));
+		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", "customer: "+customer));
 		
-		List<Agenda> agendamentos = this.repository.getAgendamentosHojeByPacienteID(customer);
-		log.info(String.format(LogUtil.FORMATLOG, "getAgendamentosHojeByPacienteID", "agenda", " agendamentos "+agendamentos.size()));
+		List<Agenda> agendamentos = this.repository.getAgendamentos(customer);
+		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", " agendamentos "+agendamentos.size()));
 
-		List<AgendamentoDTO> response = new ArrayList<AgendamentoDTO>();
-		agendamentos.stream().forEach(agenda -> response.add(agenda.getAgendamentoDTO()));
+		List<AgendamentoDTO> listAgendamentoDTO = new ArrayList<AgendamentoDTO>();
+		agendamentos.stream().forEach(agenda -> listAgendamentoDTO.add(agenda.getAgendamentoDTO()));
 		
-		return response;
+		
+		List<Agenda> hoje = this.repository.getAgendamentosHoje(customer, LocalDate.now());
+		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", " agendamentos de hoje "+hoje.size()));
+
+		List<AgendamentoDTO> listAgendamentoHoje = new ArrayList<AgendamentoDTO>();
+		hoje.stream().forEach(agenda -> listAgendamentoHoje.add(agenda.getAgendamentoDTO()));
+		
+		return new AgendaDto(listAgendamentoDTO, listAgendamentoHoje);
 	}
 
 }

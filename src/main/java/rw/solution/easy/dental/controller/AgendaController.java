@@ -1,7 +1,6 @@
 package rw.solution.easy.dental.controller;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import rw.solution.easy.dental.model.Agenda;
-import rw.solution.easy.dental.model.dto.AgendamentoDTO;
+import rw.solution.easy.dental.model.dto.AgendaDto;
 import rw.solution.easy.dental.service.AgendaService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -37,23 +35,22 @@ public class AgendaController implements Serializable {
 	@Autowired
 	private AgendaService service;
 	
-	@ApiOperation(value = "Recupera os pacientes", response = Agenda.class)
+	@ApiOperation(value = "Recupera os agendamentos", response = AgendaDto.class)
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<AgendamentoDTO>> getAgendamentosHojeByPacienteID(@PathVariable(required=true) Long customer) {
+	public ResponseEntity<AgendaDto> getAgendamentos(@PathVariable(required=true) Long customer) {
 		
 		try {
-			List<AgendamentoDTO> response = this.service.getAgendamentosHojeByPacienteID(customer);
+			AgendaDto response = this.service.getAgendamentos(customer);
 			
-			log.info(String.format(LogUtil.FORMATLOG, "getAgendamentosHojeByPacienteID", "agenda", " Response HTTP OK "+response.size()));
+			log.info(String.format(LogUtil.FORMATLOG, "AgendaController", "getAgendamentos", " Response HTTP OK "));
 			return ResponseEntity.status(HttpStatus.OK).body(response);
-			
+				
 		} catch (Exception e) {
-			log.info(String.format(LogUtil.FORMATLOG, "getAgendamentosHojeByPacienteID", "agenda", " Error"+ e.getMessage()));
+			log.info(String.format(LogUtil.FORMATLOG, "AgendaController", "getAgendamentos", " Error"+ e.getMessage()));
 			e.printStackTrace();
 		}
 		
-		log.info(String.format(LogUtil.FORMATLOG, "getAgendamentosHojeByPacienteID", "agenda", " Response HTTP INTERNAL SERVER ERROR"));
+		log.info(String.format(LogUtil.FORMATLOG, "AgendaController", "getAgendamentos", " Response HTTP INTERNAL SERVER ERROR"));
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
-
 }

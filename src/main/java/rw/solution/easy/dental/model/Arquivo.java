@@ -38,6 +38,9 @@ public class Arquivo implements Serializable {
 	@Column(name = "nome")
 	private String nome;
 	
+	@Column(name = "tipo_arquivo")
+	private String tipo;
+	
 	@JsonIgnore
 	@Lob
 	@Column(name = "bl_arquivo", nullable = true)
@@ -68,7 +71,13 @@ public class Arquivo implements Serializable {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
-	
+
+	public String getTipo() {
+		return tipo;
+	}
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
