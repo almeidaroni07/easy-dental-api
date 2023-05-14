@@ -2,12 +2,11 @@ package rw.solution.easy.dental.controller;
 
 import java.io.Serializable;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.net.HttpHeaders;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.model.Tratamento;
 import rw.solution.easy.dental.service.TratamentoService;
@@ -33,7 +31,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/tratamento/v1/")
-@Api(tags = {"Tratamento"})
+@Tag(name = "Tratamento", description = "Métodos dos Tratamentos")
 public class TratamentoController implements Serializable {
 
 	/**
@@ -46,7 +44,7 @@ public class TratamentoController implements Serializable {
 	@Autowired
 	private TratamentoService service;
 	
-	@ApiOperation(value = "Adiciona um tratamento a um paciente", response = String.class)
+	@Operation(summary = "Adiciona um tratamento a um paciente")
 	@PostMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> save(@PathVariable(required=true) Long customer,
 		  	 						   @RequestParam(required=true) Long pacienteId, 
@@ -72,7 +70,7 @@ public class TratamentoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Atualiza a assinatura de um paciente", response = String.class)
+	@Operation(summary = "Atualiza a assinatura de um paciente")
 	@PostMapping(value = "/assinatura/{customer}")
 	public ResponseEntity<String> updateAssinatura(@PathVariable(required=true) Long customer,
 					  	 						   @RequestParam(required=true) Long tratamentoID, 
@@ -99,7 +97,7 @@ public class TratamentoController implements Serializable {
 	
 	
 	
-	@ApiOperation(value = "Recupera a assinatura", response = Resource.class)
+	@Operation(summary = "Recupera a assinatura")
 	@GetMapping(value = "/assinatura/{customer}")
 	public ResponseEntity<Resource> getArquivoAssinatura(@PathVariable(required=true) Long customer,
 			   											 @RequestParam(required=true) Long tratamentoID,

@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import rw.solution.easy.dental.model.Anamnese;
 import rw.solution.easy.dental.model.Customer;
 import rw.solution.easy.dental.model.Paciente;

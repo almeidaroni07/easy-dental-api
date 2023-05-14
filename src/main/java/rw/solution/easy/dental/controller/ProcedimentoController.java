@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import rw.solution.easy.dental.model.Procedimento;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.service.ProcedimentoService;
@@ -29,7 +29,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/procedimento/v1/")
-@Api(tags = {"Procedimento"})
+@Tag(name = "Procedimento", description = "Métodos dos Procedimentos")
 public class ProcedimentoController implements Serializable {
 
 	/**
@@ -42,7 +42,7 @@ public class ProcedimentoController implements Serializable {
 	@Autowired
 	private ProcedimentoService service;
 	
-	@ApiOperation(value = "Recupera os procedimentos", response = Procedimento.class)
+	@Operation(summary = "Recupera os procedimentos")
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Procedimento>> getProcedimentos(@PathVariable(required=true) Long customer) {
 		
@@ -61,7 +61,7 @@ public class ProcedimentoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Recupera um procedimento pelo ID", response = Procedimento.class)
+	@Operation(summary = "Recupera um procedimento pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Procedimento> getProcedimentoPorID(@PathVariable(required=true) Long customer,
 													 	 @RequestParam(required=true) Long procedimentoID) {
@@ -80,7 +80,7 @@ public class ProcedimentoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Adiciona um procedimento", response = String.class)
+	@Operation(summary = "Adiciona um procedimento")
 	@PostMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> save(@PathVariable(required=true) Long customer,
 									   @RequestBody(required=true) Procedimento parameter) {
@@ -105,7 +105,7 @@ public class ProcedimentoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Atualiza um procedimento", response = String.class)
+	@Operation(summary = "Atualiza um procedimento")
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> update(@PathVariable(required=true) Long customer,
 										 @RequestParam(required=true) Long procedimentoID,
@@ -131,7 +131,7 @@ public class ProcedimentoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Deleta um procedimento", response = String.class)
+	@Operation(summary = "Deleta um procedimento")
 	@DeleteMapping(value = "/{customer}")
 	public ResponseEntity<String> delete(@PathVariable(required=true) Long customer,
 										 @RequestParam(required=true) Long procedimentoID) {

@@ -3,12 +3,11 @@ package rw.solution.easy.dental.controller;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.net.HttpHeaders;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import rw.solution.easy.dental.model.Arquivo;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.service.ArquivoService;
@@ -36,7 +34,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/arquivo/v1/")
-@Api(tags = {"Arquivos"})
+@Tag(name = "Arquivos", description = "Métodos de Arquivos")
 public class ArquivoController implements Serializable {
 
 	/**
@@ -51,7 +49,7 @@ public class ArquivoController implements Serializable {
 	
 	
 	
-	@ApiOperation(value = "Recupera os arquivos cadastrados", response = Arquivo.class)
+	@Operation(summary = "Recupera os arquivos cadastrados")
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Arquivo>> getArquivos(@PathVariable(required=true) Long customer) {
 		
@@ -70,7 +68,7 @@ public class ArquivoController implements Serializable {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
-	@ApiOperation(value = "Recupera o arquivo pelo ID", response = Arquivo.class)
+	@Operation(summary = "Recupera o arquivo pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Arquivo> getArquivoPorID(@PathVariable(required=true) Long customer,
 													@RequestParam(required=true) Long arquivoID) {
@@ -88,7 +86,7 @@ public class ArquivoController implements Serializable {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
-	@ApiOperation(value = "Adiciona um arquivo", response = String.class)
+	@Operation(summary = "Adiciona um arquivo")
 	@PostMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> save(@PathVariable(required=true) Long customer, 
 									   @RequestBody(required=true) Arquivo parameter) {
@@ -113,7 +111,7 @@ public class ArquivoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Atualiza um arquivo", response = String.class)
+	@Operation(summary = "Atualiza um arquivo")
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> update(@PathVariable(required=true) Long customer, 
 									     @RequestParam(required=true) Long arquivoID,
@@ -139,7 +137,7 @@ public class ArquivoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Deleta um arquivo", response = String.class)
+	@Operation(summary = "Deleta um arquivo")
 	@DeleteMapping(value = "/{customer}")
 	public ResponseEntity<String> delete(@PathVariable(required=true) Long customer,
 										 @RequestParam(required=true) Long arquivoID) {
@@ -165,7 +163,7 @@ public class ArquivoController implements Serializable {
 	
 	
 
-	@ApiOperation(value = "Atualiza o blob do arquivo", response = String.class)
+	@Operation(summary = "Atualiza o blob do arquivo")
 	@PostMapping(value = "/blob/{customer}")
 	public ResponseEntity<String> updateArquivo(@PathVariable(required=true) Long customer,
 				  	 						   @RequestParam(required=true) Long arquivoID, 
@@ -191,7 +189,7 @@ public class ArquivoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Recupera o arquivo", response = Resource.class)
+	@Operation(summary = "Recupera o arquivo")
 	@GetMapping(value = "/blob/{customer}")
 	public ResponseEntity<Resource> getArquivo(@PathVariable(required=true) Long customer,
 	   										   @RequestParam(required=true) Long arquivoID,

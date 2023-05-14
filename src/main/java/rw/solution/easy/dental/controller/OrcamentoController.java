@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import rw.solution.easy.dental.model.Orcamento;
 import rw.solution.easy.dental.model.OrcamentoProcedimento;
 import rw.solution.easy.dental.service.OrcamentoService;
@@ -25,7 +25,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/orcamento/v1/")
-@Api(tags = {"Orcamento"})
+@Tag(name = "Orcamento", description = "Métodos de Orcamento")
 public class OrcamentoController implements Serializable {
 
 	/**
@@ -38,7 +38,7 @@ public class OrcamentoController implements Serializable {
 	@Autowired
 	private OrcamentoService service;
 	
-	@ApiOperation(value = "Recupera os orcamentos", response = Orcamento.class)
+	@Operation(summary = "Recupera os orcamentos")
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Orcamento>> getOrcamentos(@PathVariable(required=true) Long customer) {
 		
@@ -58,7 +58,7 @@ public class OrcamentoController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Recupera os procedimentos do orcamento", response = OrcamentoProcedimento.class)
+	@Operation(summary = "Recupera os procedimentos do orcamento")
 	@GetMapping(value = "/procedimento/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<OrcamentoProcedimento>> getProcedimentosOrcamento(@PathVariable(required=true) Long customer,
 			 											 						 @RequestParam(required=true) Long orcamentoID) {

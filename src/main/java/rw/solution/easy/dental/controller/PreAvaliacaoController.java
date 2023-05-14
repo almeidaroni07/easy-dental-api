@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import rw.solution.easy.dental.model.PreAvaliacao;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.service.PreAvaliacaoService;
@@ -26,7 +26,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/pre/avaliacao/v1/")
-@Api(tags = {"Paciente"})
+@Tag(name = "Pré Avaliação", description = "Métodos da pré avaliação")
 public class PreAvaliacaoController implements Serializable  {
 
 	/**
@@ -39,7 +39,7 @@ public class PreAvaliacaoController implements Serializable  {
 	@Autowired
 	private PreAvaliacaoService service;
 	
-	@ApiOperation(value = "Recupera a pré avaliação de um paciente", response = PreAvaliacao.class)
+	@Operation(summary = "Recupera a pré avaliação de um paciente")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PreAvaliacao> getPreAvaliacaoByPacienteID(@PathVariable(required=true) Long customer,
 													 				@RequestParam(required=true) Long pacienteId) {
@@ -57,7 +57,7 @@ public class PreAvaliacaoController implements Serializable  {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
-	@ApiOperation(value = "Atualiza a pre avaliacao de um paciente", response = String.class)
+	@Operation(summary = "Atualiza a pre avaliacao de um paciente")
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updatePreAvaliacao(@PathVariable(required=true) Long customer,
 											  	 	 @RequestParam(required=true) Long pacienteId,

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import rw.solution.easy.dental.model.Anamnese;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.service.AnamneseService;
@@ -26,7 +26,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/anamnese/v1/")
-@Api(tags = {"Anamnese"})
+@Tag(name = "Anamnese", description = "Métodos da Anamnese")
 public class AnamneseController implements Serializable {
 
 	/**
@@ -39,7 +39,7 @@ public class AnamneseController implements Serializable {
 	@Autowired
 	private AnamneseService service;
 	
-	@ApiOperation(value = "Recupera o paciente pelo ID", response = Anamnese.class)
+	@Operation(summary = "Recupera o paciente pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Anamnese> getAnamneseByPacienteID(@PathVariable(required=true) Long customer,
 													 		@RequestParam(required=true) Long pacienteId) {
@@ -57,7 +57,7 @@ public class AnamneseController implements Serializable {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
-	@ApiOperation(value = "Atualiza a Anamnese de um paciente", response = String.class)
+	@Operation(summary = "Atualiza a Anamnese de um paciente")
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updateAnamnese(@PathVariable(required=true) Long customer,
 											  	 @RequestParam(required=true) Long pacienteId,

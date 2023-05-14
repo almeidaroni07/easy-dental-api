@@ -2,60 +2,53 @@ package rw.solution.easy.dental.security.filter;
 
 import java.io.IOException;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import rw.solution.easy.dental.security.model.User;
 import rw.solution.easy.dental.service.AuthenticationService;
 import rw.solution.easy.dental.util.LogUtil;
 
+@Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 	
 	private static Logger log = Logger.getLogger(AuthenticationFilter.class);
 
 	
+	@Autowired
 	private AuthenticationService authenticationService;
 	
-	public AuthenticationFilter(AuthenticationService authenticationService) {
-		super();
-		this.authenticationService = authenticationService;
-	}
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		
-		String token = getToken(request);
 		
 		try {
 			
-			log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "token: "+token));
-			boolean valid = this.authenticationService.isTokenValid(token);
+			String token = recuperarTokenJWT(request);
+			String subject = this.authenticationService.getSubject(token);
 			
-			if (valid) {
+			log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "token: "+token));
+			log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "subject: "+subject));			
+			
+			User agent = this.authenticationService.getUsuarioByUsername(subject);
+			Long cdCustomer = getCustomer(request);
+			
+			if(cdCustomer == agent.getCustomer().getId()) {
+				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(agent,null, agent.getAuthorities());
+				SecurityContextHolder.getContext().setAuthentication(authentication);
 				
-				Long userID = this.authenticationService.getUserID(token);
-				Long cdCustomer = getCustomer(request);
-				
-				User agent = this.authenticationService.getUserAuthByUserID(userID);
-				
-				if(cdCustomer == agent.getCustomer().getId()) {
-					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(agent,null, agent.getAuthorities());
-					SecurityContextHolder.getContext().setAuthentication(authentication);
-					
-				}else {
-					log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "Dentista sem acesso ao customer."));						
-				}
-							
-			}else{
-				log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "Token invalido"));
+			}else {
+				log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "Dentista sem acesso ao customer."));						
 			}
+							
 			
 		} catch (Exception e) {
 			log.error(String.format(LogUtil.FORMATLOG, "doFilterInternal", "System", "Error"), e);
@@ -65,22 +58,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		
 	}
 
-	private String getToken(HttpServletRequest request) {
-		
-		try {
-			String token = request.getHeader("Authorization");
-			log.info(String.format(LogUtil.FORMATLOG, "getToken", request.getRequestURI(), "token: "+token));
-			if (token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
-				return null;
-			}
-			
-			return token.substring(7, token.length());
-		} catch (Exception e) {
-			e.printStackTrace();
+	private String recuperarTokenJWT(HttpServletRequest request) {
+		String authorization = request.getHeader("Authorization");
+		if(null != authorization) {
+			return authorization.replace("Bearer ", "");
 		}
 		return null;
-		
 	}
+
 	
 	private Long getCustomer(HttpServletRequest request) {
 		try {

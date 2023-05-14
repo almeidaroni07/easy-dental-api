@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import rw.solution.easy.dental.model.Paciente;
 import rw.solution.easy.dental.model.PreAvaliacaoAnamnese;
 import rw.solution.easy.dental.model.Response;
@@ -30,7 +30,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/paciente/v1/")
-@Api(tags = {"Paciente"})
+@Tag(name = "Paciente", description = "Métodos dos Pacientes")
 public class PacienteController implements Serializable {
 
 	/**
@@ -43,7 +43,7 @@ public class PacienteController implements Serializable {
 	@Autowired
 	private PacienteService service;
 	
-	@ApiOperation(value = "Recupera os pacientes", response = Paciente.class)
+	@Operation(summary = "Recupera os pacientes")
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Paciente>> getPacientes(@PathVariable(required=true) Long customer) {
 		
@@ -61,7 +61,7 @@ public class PacienteController implements Serializable {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
-	@ApiOperation(value = "Recupera o paciente pelo ID", response = Paciente.class)
+	@Operation(summary = "Recupera o paciente pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Paciente> getPacientePorID(@PathVariable(required=true) Long customer,
 													 @RequestParam(required=true) Long pacienteId) {
@@ -80,7 +80,7 @@ public class PacienteController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Adiciona um Paciente", response = String.class)
+	@Operation(summary = "Adiciona um Paciente")
 	@PostMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> addPaciente(@PathVariable(required=true) Long customer, 
 										  	  @RequestBody(required=true) Paciente parameter) {
@@ -105,7 +105,7 @@ public class PacienteController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Atualiza um Paciente", response = String.class)
+	@Operation(summary = "Atualiza um Paciente")
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updatePaciente(@PathVariable(required=true) Long customer,
 											  	 @RequestParam(required=true) Long pacienteId,
@@ -131,7 +131,7 @@ public class PacienteController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Deleta um Paciente", response = String.class)
+	@Operation(summary = "Deleta um Paciente")
 	@DeleteMapping(value = "/{customer}")
 	public ResponseEntity<String> deletePaciente(@PathVariable(required=true) Long customer,
 											  	 @RequestParam(required=true) Long pacienteId) {
@@ -156,7 +156,7 @@ public class PacienteController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Recupera a pre avaliacao e a anamnese pelo ID", response = PreAvaliacaoAnamnese.class)
+	@Operation(summary = "Recupera a pre avaliacao e a anamnese pelo ID")
 	@GetMapping(value = "/pre/anamnese/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PreAvaliacaoAnamnese> getAvaliacaoAnamnese(@PathVariable(required=true) Long customer,
 													 				 @RequestParam(required=true) Long pacienteId) {
@@ -175,7 +175,7 @@ public class PacienteController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Atualiza a pre avaliacao e a anamnese", response = String.class)
+	@Operation(summary = "Atualiza a pre avaliacao e a anamnese")
 	@PutMapping(value = "/pre/anamnese/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updatePreAnamnese(@PathVariable(required=true) Long customer,
 											  	 	@RequestParam(required=true) Long pacienteId,

@@ -2,12 +2,11 @@ package rw.solution.easy.dental.controller;
 
 import java.io.Serializable;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.net.HttpHeaders;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import rw.solution.easy.dental.model.Response;
-import rw.solution.easy.dental.model.dto.AgendaDto;
 import rw.solution.easy.dental.security.model.User;
 import rw.solution.easy.dental.service.UserService;
 import rw.solution.easy.dental.util.LogUtil;
@@ -35,7 +32,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/usuario/v1/")
-@Api(tags = {"Usuarios"})
+@Tag(name = "Usuarios", description = "Métodos dos Usuarios")
 public class UsuarioController implements Serializable {
 
 	/**
@@ -48,7 +45,7 @@ public class UsuarioController implements Serializable {
 	@Autowired
 	private UserService service;
 	
-	@ApiOperation(value = "Recupera o usuário pelo ID", response = AgendaDto.class)
+	@Operation(summary = "Recupera o usuário pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> buscarPorID(@PathVariable(required=true) Long customer,
 	 										@RequestParam(required=true) Long usuarioID) {
@@ -69,7 +66,7 @@ public class UsuarioController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Atualiza o usuario", response = String.class)
+	@Operation(summary = "Atualiza o usuario")
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updateUsuario(@PathVariable(required=true) Long customer,
 											  	@RequestParam(required=true) Long usuarioID,
@@ -95,7 +92,7 @@ public class UsuarioController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Atualiza o blob da foto", response = String.class)
+	@Operation(summary = "Atualiza o blob da foto")
 	@PostMapping(value = "/foto/{customer}")
 	public ResponseEntity<String> updateFoto(@PathVariable(required=true) Long customer,
 				  	 						 @RequestParam(required=true) Long usuarioID, 
@@ -121,7 +118,7 @@ public class UsuarioController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Recupera a foto do usuario", response = Resource.class)
+	@Operation(summary = "Recupera a foto do usuario")
 	@GetMapping(value = "/foto/{customer}")
 	public ResponseEntity<Resource> getFoto(@PathVariable(required=true) Long customer,
 	   										   @RequestParam(required=true) Long usuarioID,

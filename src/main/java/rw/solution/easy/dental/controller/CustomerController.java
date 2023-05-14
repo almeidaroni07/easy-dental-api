@@ -2,12 +2,11 @@ package rw.solution.easy.dental.controller;
 
 import java.io.Serializable;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.net.HttpHeaders;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.service.CustomerService;
 import rw.solution.easy.dental.util.LogUtil;
@@ -31,7 +29,7 @@ import rw.solution.easy.dental.util.LogUtil;
 @CrossOrigin
 @RestController
 @RequestMapping("/customer/v1/")
-@Api(tags = {"Customer"})
+@Tag(name = "Customer", description = "Métodos de Customer")
 public class CustomerController implements Serializable {
 
 	
@@ -46,7 +44,7 @@ public class CustomerController implements Serializable {
 	private CustomerService service;
 
 
-	@ApiOperation(value = "Atualiza o blob da foto", response = String.class)
+	@Operation(summary = "Atualiza o blob da foto")
 	@PostMapping(value = "/logo/{customer}")
 	public ResponseEntity<String> updateLogo(@PathVariable(required=true) Long customer, 
 											 @RequestBody(required=true) MultipartFile logo) {
@@ -71,7 +69,7 @@ public class CustomerController implements Serializable {
 	}
 	
 	
-	@ApiOperation(value = "Recupera a foto do usuario", response = Resource.class)
+	@Operation(summary = "Recupera a foto do usuario")
 	@GetMapping(value = "/logo/{customer}")
 	public ResponseEntity<Resource> getFoto(@PathVariable(required=true) Long customer,
 	   										HttpServletRequest request) {
