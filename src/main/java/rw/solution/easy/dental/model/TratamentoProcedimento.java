@@ -6,7 +6,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "pk")
 @Entity
 @Table(name="tratamento_procedimento")
 public class TratamentoProcedimento implements Serializable {
@@ -21,31 +31,5 @@ public class TratamentoProcedimento implements Serializable {
 	
 	@Column(name = "nome")
 	private String nome;
-	
-	public TratamentoProcedimento() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public TratamentoProcedimento(TratamentoProcedimentoPK pk, String nome) {
-		super();
-		this.pk = pk;
-		this.nome = nome;
-	}
-
-	public TratamentoProcedimentoPK getPk() {
-		return pk;
-	}
-
-	public void setPk(TratamentoProcedimentoPK pk) {
-		this.pk = pk;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 	
 }

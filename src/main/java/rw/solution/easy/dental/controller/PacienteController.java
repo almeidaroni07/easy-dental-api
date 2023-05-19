@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import rw.solution.easy.dental.model.Paciente;
 import rw.solution.easy.dental.model.PreAvaliacaoAnamnese;
 import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.record.DadosPaciente;
 import rw.solution.easy.dental.service.PacienteService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -45,10 +45,10 @@ public class PacienteController implements Serializable {
 	
 	@Operation(summary = "Recupera os pacientes")
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Paciente>> getPacientes(@PathVariable(required=true) Long customer) {
+	public ResponseEntity<List<DadosPaciente>> getPacientes(@PathVariable(required=true) Long customer) {
 		
 		try {
-			List<Paciente> response = this.service.getPacientesByCustomer(customer);
+			List<DadosPaciente> response = this.service.getPacientesByCustomer(customer);
 			log.info(String.format(LogUtil.FORMATLOG, "getPacientes", "paciente", " Response HTTP OK"));
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 			
@@ -63,10 +63,10 @@ public class PacienteController implements Serializable {
 	
 	@Operation(summary = "Recupera o paciente pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Paciente> getPacientePorID(@PathVariable(required=true) Long customer,
+	public ResponseEntity<DadosPaciente> getPacientePorID(@PathVariable(required=true) Long customer,
 													 @RequestParam(required=true) Long pacienteId) {
 		try {
-			Paciente response = this.service.getPacienteByID(pacienteId);
+			DadosPaciente response = this.service.getPacienteByID(pacienteId);
 			log.info(String.format(LogUtil.FORMATLOG, "getPacientePorID", "paciente", " Response HTTP OK"));
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 			
@@ -83,7 +83,7 @@ public class PacienteController implements Serializable {
 	@Operation(summary = "Adiciona um Paciente")
 	@PostMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> addPaciente(@PathVariable(required=true) Long customer, 
-										  	  @RequestBody(required=true) Paciente parameter) {
+										  	  @RequestBody(required=true) DadosPaciente parameter) {
 	
 		try {
 			
@@ -109,7 +109,7 @@ public class PacienteController implements Serializable {
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updatePaciente(@PathVariable(required=true) Long customer,
 											  	 @RequestParam(required=true) Long pacienteId,
-											  	 @RequestBody(required=true) Paciente parameter) {
+											  	 @RequestBody(required=true) DadosPaciente parameter) {
 	
 		try {
 			

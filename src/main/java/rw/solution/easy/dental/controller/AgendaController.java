@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import rw.solution.easy.dental.model.dto.AgendaDto;
+import rw.solution.easy.dental.model.record.DadosAgenda;
 import rw.solution.easy.dental.service.AgendaService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -37,10 +37,10 @@ public class AgendaController implements Serializable {
 	
 	@Operation(summary = "Recupera os agendamentos")
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AgendaDto> getAgendamentos(@PathVariable(required=true) Long customer) {
+	public ResponseEntity<DadosAgenda> getAgendamentos(@PathVariable(required=true) Long customer) {
 		
 		try {
-			AgendaDto response = this.service.getAgendamentos(customer);
+			DadosAgenda response = this.service.getAgendamentos(customer);
 			
 			log.info(String.format(LogUtil.FORMATLOG, "AgendaController", "getAgendamentos", " Response HTTP OK "));
 			return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -9,8 +9,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import rw.solution.easy.dental.model.enums.StatusCustomer;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -26,29 +36,5 @@ public class Customer {
 	@Lob
 	@Column(name = "bl_logo", nullable = true)
 	private byte[] logo;
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public StatusCustomer getStatus() {
-		return status;
-	}
-	public void setStatus(StatusCustomer status) {
-		this.status = status;
-	}
-	public byte[] getLogo() {
-		return logo;
-	}
-	public void setLogo(byte[] logo) {
-		this.logo = logo;
-	}	
+
 }

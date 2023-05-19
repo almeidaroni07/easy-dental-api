@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import rw.solution.easy.dental.model.Response;
-import rw.solution.easy.dental.model.Tratamento;
+import rw.solution.easy.dental.model.record.DadosTratamento;
 import rw.solution.easy.dental.service.TratamentoService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -48,7 +48,7 @@ public class TratamentoController implements Serializable {
 	@PostMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> save(@PathVariable(required=true) Long customer,
 		  	 						   @RequestParam(required=true) Long pacienteId, 
-									   @RequestBody(required=true) Tratamento parameter) {
+									   @RequestBody(required=true) DadosTratamento parameter) {
 	
 		try {
 			

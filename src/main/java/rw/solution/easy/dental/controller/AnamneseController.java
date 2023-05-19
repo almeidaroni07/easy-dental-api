@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import rw.solution.easy.dental.model.Anamnese;
 import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.record.DadosAnamnese;
 import rw.solution.easy.dental.service.AnamneseService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -41,10 +42,10 @@ public class AnamneseController implements Serializable {
 	
 	@Operation(summary = "Recupera o paciente pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Anamnese> getAnamneseByPacienteID(@PathVariable(required=true) Long customer,
-													 		@RequestParam(required=true) Long pacienteId) {
+	public ResponseEntity<DadosAnamnese> getAnamneseByPacienteID(@PathVariable(required=true) Long customer,
+													 			 @RequestParam(required=true) Long pacienteId) {
 		try {
-			Anamnese response = this.service.getAnamneseByPacienteID(pacienteId);
+			DadosAnamnese response = this.service.getAnamneseByPacienteID(pacienteId);
 			log.info(String.format(LogUtil.FORMATLOG, "getAnamneseByPacienteID", "paciente", " Response HTTP OK"));
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 			

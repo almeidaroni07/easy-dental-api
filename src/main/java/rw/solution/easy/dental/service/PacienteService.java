@@ -16,6 +16,9 @@ import rw.solution.easy.dental.model.PreAvaliacao;
 import rw.solution.easy.dental.model.PreAvaliacaoAnamnese;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.model.enums.StatusPaciente;
+import rw.solution.easy.dental.model.record.DadosAnamnese;
+import rw.solution.easy.dental.model.record.DadosPaciente;
+import rw.solution.easy.dental.model.record.DadosPreAvaliacao;
 import rw.solution.easy.dental.model.repository.AnamneseRepository;
 import rw.solution.easy.dental.model.repository.CustomerRepository;
 import rw.solution.easy.dental.model.repository.PacienteRepository;
@@ -44,54 +47,43 @@ public class PacienteService implements Serializable {
 	@Autowired
 	private PreAvaliacaoRepository preAvaliacaoRepository;
 
-	public List<Paciente> getPacientesByCustomer(Long customer) throws Exception {
-		return this.repository.getPacientesByCustomer(customer);
+	public List<DadosPaciente> getPacientesByCustomer(Long customer) throws Exception {
+		List<Paciente> listPaciente = this.repository.getPacientesByCustomer(customer);
+		return listPaciente.stream().map(paciente -> new DadosPaciente(paciente)).toList();
 	}
 	
-	public Paciente getPacienteByID(Long id) throws Exception {
-		return this.repository.getPacienteByID(id);
+	public DadosPaciente getPacienteByID(Long id) throws Exception {
+		Paciente paciente = this.repository.getPacienteByID(id);
+		return new DadosPaciente(paciente);
 	}
 
 	@Transactional
-	public Response addPaciente(Long customerID, Paciente paciente) throws Exception{
+	public Response addPaciente(Long customerID, DadosPaciente dados) throws Exception{
 		
 		Customer customer = this.customerRepository.getCustomerById(customerID);
+		Paciente paciente = new Paciente(dados);
 		paciente.setCustomer(customer);
 		paciente.setUltimaConsulta(LocalDate.now());
 		paciente.setStatus(StatusPaciente.ATIVO);
 	
 		Paciente save = this.repository.save(paciente);
 		
-		Anamnese anamnese = new Anamnese(customerID, save, true,  "", false, "", false, "",  false, false, "", false, "", false, false, false, false, "", "teste teste");
+		Anamnese anamnese = new Anamnese(new DadosAnamnese(null, false, null, false, null, false, null, false, false, null, false, null, false, false, false, false, null, null), save);
 		this.anamneseRepository.save(anamnese);
 		
-		PreAvaliacao preAvaliacao = new PreAvaliacao(paciente, false, false, false, true, false, false, " teste teste ");
+		PreAvaliacao preAvaliacao = new PreAvaliacao(new DadosPreAvaliacao( false, false, false, true, false, false, ""), save);
 		this.preAvaliacaoRepository.save(preAvaliacao);
 		
 		return new Response(true, "Paciente adicionado com sucesso");
 	}
 	
 	@Transactional
-	public Response updatePaciente(Long customerID, Long id, Paciente paciente) throws Exception{
+	public Response updatePaciente(Long customerID, Long id, DadosPaciente dados) throws Exception{
 		
-		Paciente paciente2 = this.repository.getPacienteByID(id);
+		Paciente paciente = this.repository.getPacienteByID(id);
+		paciente.atualizarInformacoes(dados);
 		
-		Paciente updateP = new Paciente(id, 
-										paciente.getNome(), 
-										paciente.getDataNascimento(), 
-										paciente.getEmail(), 
-										paciente.getCpf(), 
-										paciente.getRg(), 
-										StatusPaciente.ATIVO, 
-										paciente.getUltimaConsulta(), 
-										paciente.getRua(), 
-										paciente.getBairro(), 
-										paciente.getCidade(), 
-										paciente.getEstado(),
-										paciente2.getCustomer());	
-		
-		
-		this.repository.save(updateP);
+		this.repository.save(paciente);
 		
 		return new Response(true, "Paciente adicionado com sucesso");
 	}

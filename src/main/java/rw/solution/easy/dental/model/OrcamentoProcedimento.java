@@ -1,7 +1,6 @@
 package rw.solution.easy.dental.model;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,7 +13,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "orcamento_procedimento")
 public class OrcamentoProcedimento implements Serializable  {
@@ -39,71 +48,10 @@ public class OrcamentoProcedimento implements Serializable  {
 	@Column(name = "valor")
 	private Double valor;
 	
-	public OrcamentoProcedimento() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public OrcamentoProcedimento(Orcamento orcamento, String nome, Double valor) {
-		super();
+	public OrcamentoProcedimento(Orcamento orcamento, Procedimento procedimento) {
 		this.orcamento = orcamento;
-		this.nome = nome;
-		this.valor = valor;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Orcamento getOrcamento() {
-		return orcamento;
-	}
-
-	public void setOrcamento(Orcamento orcamento) {
-		this.orcamento = orcamento;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public Double getValor() {
-		return valor;
-	}
-
-	public void setValor(Double valor) {
-		this.valor = valor;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, nome, orcamento, valor);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OrcamentoProcedimento other = (OrcamentoProcedimento) obj;
-		return Objects.equals(id, other.id) && Objects.equals(nome, other.nome)
-				&& Objects.equals(orcamento, other.orcamento) && Objects.equals(valor, other.valor);
-	}
-
-	@Override
-	public String toString() {
-		return "OrcamentoProcedimento [id=" + id + ", orcamento=" + orcamento + ", nome=" + nome + ", valor=" + valor
-				+ "]";
+		this.nome = procedimento.getNome();
+		this.valor = procedimento.getValor();
 	}
 
 }

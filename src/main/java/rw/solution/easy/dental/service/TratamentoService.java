@@ -20,8 +20,9 @@ import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.model.Tratamento;
 import rw.solution.easy.dental.model.TratamentoProcedimento;
 import rw.solution.easy.dental.model.TratamentoProcedimentoPK;
-import rw.solution.easy.dental.model.dto.ProcedimentoDto;
 import rw.solution.easy.dental.model.enums.StatusConsulta;
+import rw.solution.easy.dental.model.record.DadosProcedimento;
+import rw.solution.easy.dental.model.record.DadosTratamento;
 import rw.solution.easy.dental.model.repository.AgendaRepository;
 import rw.solution.easy.dental.model.repository.CustomerRepository;
 import rw.solution.easy.dental.model.repository.OrcamentoProcedimentoRepository;
@@ -66,35 +67,33 @@ public class TratamentoService implements Serializable {
 	@Autowired
 	private CustomerRepository customerRepository;
 	
-	public Response save(Long customerID, Long pacienteID, Tratamento tratamento) throws Exception {
+	public Response save(Long customerID, Long pacienteID, DadosTratamento dados) throws Exception {
 		
 		log.info(String.format(LogUtil.FORMATLOG, "save", "tratamento", "customer: "+customerID));
 		log.info(String.format(LogUtil.FORMATLOG, "save", "tratamento", "pacienteID: "+pacienteID));
 		Customer customer = this.customerRepository.getCustomerById(customerID);
 		
 		log.info(String.format(LogUtil.FORMATLOG, "save", "tratamento", "Buscando o Paciente."));
-		Paciente pacienteByID = this.pacienteRepository.getPacienteByID(pacienteID);
+		Paciente paciente = this.pacienteRepository.getPacienteByID(pacienteID);
 		
 		
 		log.info(String.format(LogUtil.FORMATLOG, "save", "tratamento", "Salvando o tratamento"));
-		tratamento.setPaciente(pacienteByID);
-		tratamento.setDataTratamento(LocalDate.now());
-		Tratamento save = this.repository.save(tratamento);
+		Tratamento tratamento = this.repository.save(new Tratamento(dados, paciente));
 		
-		Orcamento orcamento = this.orcamentoRepository.save(new Orcamento(pacienteID, LocalDate.now(), customer, pacienteByID.getNome()));
+		Orcamento orcamento = this.orcamentoRepository.save(new Orcamento(customer, paciente));
 		List<OrcamentoProcedimento> listOrcamento = new ArrayList<OrcamentoProcedimento>();
 		Double valorTotal = 0.0;
 		
 		log.info(String.format(LogUtil.FORMATLOG, "save", "tratamento", "Salvando os agendamentos"));
-		for(ProcedimentoDto procedimento : tratamento.getProcedimentos()) {
+		for(DadosProcedimento dadosProcedimento : dados.procedimentos()) {
 			
 			
-			Procedimento procedimentoByID = this.procedimentoRepository.getProcedimentoByID(procedimento.getProcedimentoID());
-			this.agendaRepository.save(new Agenda(pacienteByID, procedimento.getDataFormatada(), procedimento.getInicio(), procedimento.getFim(), StatusConsulta.MARCADO, procedimentoByID, save.getId()));
+			Procedimento procedimentoByID = this.procedimentoRepository.getProcedimentoByID(dadosProcedimento.procedimentoID());
+			this.agendaRepository.save(new Agenda(paciente, dadosProcedimento, procedimentoByID, tratamento));
 			
-			this.tpRepository.save(new TratamentoProcedimento(new TratamentoProcedimentoPK(save.getId(), pacienteByID.getId()), procedimento.getProcedimentoNome()));
+			this.tpRepository.save(new TratamentoProcedimento(new TratamentoProcedimentoPK(tratamento.getId(), paciente.getId()), dadosProcedimento.procedimentoNome()));
 			
-			listOrcamento.add(new OrcamentoProcedimento(orcamento, procedimentoByID.getNome(), procedimentoByID.getValor()));
+			listOrcamento.add(new OrcamentoProcedimento(orcamento, procedimentoByID));
 			valorTotal = valorTotal + procedimentoByID.getValor();
 		}
 		
@@ -103,7 +102,7 @@ public class TratamentoService implements Serializable {
 		
 		this.opRepository.saveAll(listOrcamento);
 		
-		return new Response(true, "Tratamento salvo com sucesso.", save.getId());
+		return new Response(true, "Tratamento salvo com sucesso.", tratamento.getId());
 	}
 
 	public Response updateAssinatura(Long customer, Long tratamentoID, MultipartFile assinatura) throws Exception  {

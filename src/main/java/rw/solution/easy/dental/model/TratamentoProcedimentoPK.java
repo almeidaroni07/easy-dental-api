@@ -4,7 +4,17 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Embeddable
 public class TratamentoProcedimentoPK implements Serializable{
 
@@ -18,25 +28,4 @@ public class TratamentoProcedimentoPK implements Serializable{
 	@Column(name = "procedimento_id")
 	private Long procedimentoID;
 	
-	public TratamentoProcedimentoPK() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public TratamentoProcedimentoPK(Long tratamentoID, Long procedimentoID) {
-		super();
-		this.tratamentoID = tratamentoID;
-		this.procedimentoID = procedimentoID;
-	}
-	public Long getTratamentoID() {
-		return tratamentoID;
-	}
-	public void setTratamentoID(Long tratamentoID) {
-		this.tratamentoID = tratamentoID;
-	}
-	public Long getProcedimentoID() {
-		return procedimentoID;
-	}
-	public void setProcedimentoID(Long procedimentoID) {
-		this.procedimentoID = procedimentoID;
-	}
 }

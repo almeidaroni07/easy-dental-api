@@ -3,7 +3,6 @@ package rw.solution.easy.dental.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 
@@ -22,10 +21,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import rw.solution.easy.dental.model.enums.StatusPaciente;
+import rw.solution.easy.dental.model.record.DadosPaciente;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "paciente")
 public class Paciente implements Serializable {
@@ -88,179 +97,40 @@ public class Paciente implements Serializable {
 	@JoinColumn(name = "tratamento_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Tratamento tratamento;
 	
-	
-	@Transient
-	private String endereco;
-	@Transient
-	private String ultimaConsultaFmt;
-	
-	public Paciente() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public Paciente(Long id, String nome, LocalDate dataNascimento, String email, String cpf, String rg,
-			StatusPaciente status, LocalDate ultimaConsulta, String rua, String bairro, String cidade, String estado, Customer customer) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.dataNascimento = dataNascimento;
-		this.email = email;
-		this.cpf = cpf;
-		this.rg = rg;
-		this.status = status;
-		this.ultimaConsulta = ultimaConsulta;
-		this.rua = rua;
-		this.bairro = bairro;
-		this.cidade = cidade;
-		this.estado = estado;
-		this.customer = customer;
+
+	public Paciente(DadosPaciente dados) {
+		this.nome = dados.nome();
+		this.email = dados.email();
+		this.cpf = dados.cpf();
+		this.rg = dados.rg();
+		this.rua = dados.rua();
+		this.bairro = dados.bairro();
+		this.cidade = dados.cidade();
+		this.estado = dados.estado();
+		this.dataNascimento = dados.dataNascimento();
 	}
 	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public LocalDate getDataNascimento() {
-		return dataNascimento;
-	}
-	public void setDataNascimento(LocalDate dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-	public String getEndereco() {
-		return endereco;
-	}
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getCpf() {
-		return cpf;
-	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-	public String getRg() {
-		return rg;
-	}
-	public void setRg(String rg) {
-		this.rg = rg;
-	}
-	public StatusPaciente getStatus() {
-		return status;
-	}
-	public void setStatus(StatusPaciente status) {
-		this.status = status;
-	}
-	public LocalDate getUltimaConsulta() {
-		return ultimaConsulta;
-	}
-	public void setUltimaConsulta(LocalDate ultimaConsulta) {
-		this.ultimaConsulta = ultimaConsulta;
+	public void atualizarInformacoes(@Valid DadosPaciente dados) {
+		this.nome = dados.nome();
+		this.email = dados.email();
+		this.cpf = dados.cpf();
+		this.rg = dados.rg();
+		this.rua = dados.rua();
+		this.bairro = dados.bairro();
+		this.cidade = dados.cidade();
+		this.estado = dados.estado();
+		this.dataNascimento = dados.dataNascimento();
 	}
 	
-	public Customer getCustomer() {
-		return customer;
-	}
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public String getRua() {
-		return rua;
-	}
-	public void setRua(String rua) {
-		this.rua = rua;
-	}
-	public String getBairro() {
-		return bairro;
-	}
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-	public String getCidade() {
-		return cidade;
-	}
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
 	
-	public Anamnese getAnamnese() {
-		return anamnese;
-	}
-
-	public void setAnamnese(Anamnese anamnese) {
-		this.anamnese = anamnese;
-	}
-
-	public PreAvaliacao getPreAvaliacao() {
-		return preAvaliacao;
-	}
-
-	public void setPreAvaliacao(PreAvaliacao preAvaliacao) {
-		this.preAvaliacao = preAvaliacao;
-	}
-
-	public Tratamento getTratamento() {
-		return tratamento;
-	}
-
-	public void setTratamento(Tratamento tratamento) {
-		this.tratamento = tratamento;
-	}
-
 	public String getUltimaConsultaFmt() {
 		try {
 			return this.ultimaConsulta.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return ultimaConsultaFmt;
+		return "";
 	}
-	public void setUltimaConsultaFmt(String ultimaConsultaFmt) {
-		this.ultimaConsultaFmt = ultimaConsultaFmt;
-	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(cpf, dataNascimento, email, endereco, id, nome, rg, status, ultimaConsulta);
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Paciente other = (Paciente) obj;
-		return Objects.equals(cpf, other.cpf) && Objects.equals(dataNascimento, other.dataNascimento)
-				&& Objects.equals(email, other.email) && Objects.equals(endereco, other.endereco)
-				&& Objects.equals(id, other.id) && Objects.equals(nome, other.nome) && Objects.equals(rg, other.rg)
-				&& status == other.status && Objects.equals(ultimaConsulta, other.ultimaConsulta);
-	}
-	@Override
-	public String toString() {
-		return "Paciente [id=" + id + ", nome=" + nome + ", dataNascimento=" + dataNascimento + ", endereco=" + endereco
-				+ ", email=" + email + ", cpf=" + cpf + ", rg=" + rg + ", status=" + status + ", ultimaConsulta="
-				+ ultimaConsulta + "]";
-	}
-
+	
+	
 }

@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rw.solution.easy.dental.model.Agenda;
-import rw.solution.easy.dental.model.dto.AgendaDto;
-import rw.solution.easy.dental.model.dto.AgendamentoDTO;
+import rw.solution.easy.dental.model.record.DadosAgenda;
+import rw.solution.easy.dental.model.record.DadosAgendamento;
 import rw.solution.easy.dental.model.repository.AgendaRepository;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -28,24 +28,24 @@ public class AgendaService implements Serializable {
 	@Autowired
 	private AgendaRepository repository;
 	
-	public AgendaDto getAgendamentos(Long customer) throws Exception{
+	public DadosAgenda getAgendamentos(Long customer) throws Exception{
 		
 		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", "customer: "+customer));
 		
 		List<Agenda> agendamentos = this.repository.getAgendamentos(customer);
 		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", " agendamentos "+agendamentos.size()));
 
-		List<AgendamentoDTO> listAgendamentoDTO = new ArrayList<AgendamentoDTO>();
-		agendamentos.stream().forEach(agenda -> listAgendamentoDTO.add(agenda.getAgendamentoDTO()));
+		List<DadosAgendamento> listAgendamentoDTO = new ArrayList<DadosAgendamento>();
+		agendamentos.stream().forEach(agenda -> listAgendamentoDTO.add(new DadosAgendamento(agenda)));
 		
 		
 		List<Agenda> hoje = this.repository.getAgendamentosHoje(customer, LocalDate.now());
 		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", " agendamentos de hoje "+hoje.size()));
 
-		List<AgendamentoDTO> listAgendamentoHoje = new ArrayList<AgendamentoDTO>();
-		hoje.stream().forEach(agenda -> listAgendamentoHoje.add(agenda.getAgendamentoDTO()));
+		List<DadosAgendamento> listAgendamentoHoje = new ArrayList<DadosAgendamento>();
+		hoje.stream().forEach(agenda -> listAgendamentoHoje.add(new DadosAgendamento(agenda)));
 		
-		return new AgendaDto(listAgendamentoDTO, listAgendamentoHoje);
+		return new DadosAgenda(listAgendamentoDTO, listAgendamentoHoje);
 	}
 
 }

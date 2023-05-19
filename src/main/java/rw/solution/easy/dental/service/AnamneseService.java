@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import rw.solution.easy.dental.model.Anamnese;
 import rw.solution.easy.dental.model.Paciente;
 import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.record.DadosAnamnese;
 import rw.solution.easy.dental.model.repository.AnamneseRepository;
 import rw.solution.easy.dental.model.repository.PacienteRepository;
 import rw.solution.easy.dental.util.LogUtil;
@@ -29,9 +30,10 @@ public class AnamneseService implements Serializable {
 	@Autowired
 	private PacienteRepository pacienteRepository;
 
-	public Anamnese getAnamneseByPacienteID(Long pacienteId) throws Exception {
+	public DadosAnamnese getAnamneseByPacienteID(Long pacienteId) throws Exception {
 		log.info(String.format(LogUtil.FORMATLOG, "getAnamneseByPacienteID", "paciente", " Buscando a anamnese do paciente: "+pacienteId));
-		return this.repository.getAnamneseByPacienteID(pacienteId);
+		Anamnese anamnese = this.repository.getAnamneseByPacienteID(pacienteId);
+		return new DadosAnamnese(anamnese);
 	}
 	
 	public Response updateAnamnese(Long customerID, Long pacienteId, Anamnese anamnese) throws Exception{
