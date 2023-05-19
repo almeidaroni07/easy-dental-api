@@ -14,7 +14,9 @@ public record DadosPaciente(@NotBlank String nome,
 							@NotBlank String bairro,
 							@NotBlank String cidade,
 							@NotBlank String estado,
-							@NotNull LocalDate dataNascimento) {
+							@NotNull LocalDate dataNascimento,
+							String ultimaConsulta,
+							String status) {
 	
 	public DadosPaciente(Paciente paciente) {
 		this(paciente.getNome(), 
@@ -25,7 +27,9 @@ public record DadosPaciente(@NotBlank String nome,
 			 paciente.getBairro(), 
 			 paciente.getCidade(), 
 			 paciente.getEstado(), 
-			 paciente.getDataNascimento());
+			 paciente.getDataNascimento(),
+			 paciente.getUltimaConsultaFmt(),
+			 paciente.getStatus().toString());
 	}
 
 }
