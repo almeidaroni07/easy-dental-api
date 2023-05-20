@@ -103,7 +103,7 @@ public class Agenda implements Serializable {
 	}
 	
 	public DadosAgendamentoCor getDadosAgendamentoCor() {
-		return new DadosAgendamentoCor(this.getProcedimento().getCor(), "#FAE3E3");
+		return new DadosAgendamentoCor(this.getProcedimento().getCor(), this.getProcedimento().getCor());
 	}
 	
 	
@@ -114,6 +114,7 @@ public class Agenda implements Serializable {
 		this.horaInicioConsulta = dados.inicio();
 		this.horaFimConsulta = dados.fim();
 		this.status = StatusConsulta.MARCADO;
+		this.procedimento = procedimento;
 	}
 	
 	

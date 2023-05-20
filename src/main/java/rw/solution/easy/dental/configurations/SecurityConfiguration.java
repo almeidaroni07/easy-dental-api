@@ -45,6 +45,7 @@ public class SecurityConfiguration {
 			   .requestMatchers(HttpMethod.GET, "/swagger-resources/**").permitAll()
 			   .requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll()
 			   .requestMatchers(HttpMethod.GET, "/webjars/**").permitAll()
+			   .requestMatchers(HttpMethod.GET, "/h2-console").permitAll()
 			   .anyRequest().authenticated()
 			   .and()
 			   .addFilterBefore(this.securityFilter, UsernamePasswordAuthenticationFilter.class)

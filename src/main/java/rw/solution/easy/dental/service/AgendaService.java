@@ -33,7 +33,7 @@ public class AgendaService implements Serializable {
 		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", "customer: "+customer));
 		
 		List<Agenda> agendamentos = this.repository.getAgendamentos(customer);
-		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", " agendamentos "+agendamentos.size()));
+		log.info(String.format(LogUtil.FORMATLOG, "AgendaService", "getAgendamentos", " agendamentos "+agendamentos.get(0).getProcedimento().getNome()));
 
 		List<DadosAgendamento> listAgendamentoDTO = new ArrayList<DadosAgendamento>();
 		agendamentos.stream().forEach(agenda -> listAgendamentoDTO.add(new DadosAgendamento(agenda)));

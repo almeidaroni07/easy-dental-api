@@ -1,7 +1,6 @@
 package rw.solution.easy.dental.service;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.model.Tratamento;
 import rw.solution.easy.dental.model.TratamentoProcedimento;
 import rw.solution.easy.dental.model.TratamentoProcedimentoPK;
-import rw.solution.easy.dental.model.enums.StatusConsulta;
 import rw.solution.easy.dental.model.record.DadosProcedimento;
 import rw.solution.easy.dental.model.record.DadosTratamento;
 import rw.solution.easy.dental.model.repository.AgendaRepository;
@@ -86,7 +84,6 @@ public class TratamentoService implements Serializable {
 		
 		log.info(String.format(LogUtil.FORMATLOG, "save", "tratamento", "Salvando os agendamentos"));
 		for(DadosProcedimento dadosProcedimento : dados.procedimentos()) {
-			
 			
 			Procedimento procedimentoByID = this.procedimentoRepository.getProcedimentoByID(dadosProcedimento.procedimentoID());
 			this.agendaRepository.save(new Agenda(paciente, dadosProcedimento, procedimentoByID, tratamento));

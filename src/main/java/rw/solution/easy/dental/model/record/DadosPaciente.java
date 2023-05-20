@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import rw.solution.easy.dental.model.Paciente;
 
-public record DadosPaciente(@NotBlank String nome,
+public record DadosPaciente(Long id,
+							@NotBlank String nome,
 							@NotBlank String email,
 							@NotBlank String cpf,
 							@NotBlank String rg,
@@ -19,7 +20,8 @@ public record DadosPaciente(@NotBlank String nome,
 							String status) {
 	
 	public DadosPaciente(Paciente paciente) {
-		this(paciente.getNome(), 
+		this(paciente.getId(),
+			 paciente.getNome(), 
 			 paciente.getEmail(), 
 			 paciente.getCpf(), 
 			 paciente.getRg(), 
