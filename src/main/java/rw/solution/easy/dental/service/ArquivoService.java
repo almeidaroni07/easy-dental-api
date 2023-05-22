@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpServletRequest;
 import rw.solution.easy.dental.model.Arquivo;
 import rw.solution.easy.dental.model.Customer;
 import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.record.DadosArquivo;
 import rw.solution.easy.dental.model.repository.ArquivoRepository;
 import rw.solution.easy.dental.model.repository.CustomerRepository;
 import rw.solution.easy.dental.util.LogUtil;
@@ -88,6 +92,25 @@ public class ArquivoService implements Serializable {
 	public Arquivo getArquivoPorID(Long arquivoID) throws Exception {
 		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivoPorID", "arquivoID: "+arquivoID));
 		return this.repository.getArquivoByID(arquivoID);
+	}
+
+
+	public DadosArquivo downloadArquivo(Long customer, Long arquivoID, HttpServletRequest request) throws Exception {
+		byte[] response = this.getArquivo(customer, arquivoID);
+		log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", "Blob: "+response));
+		
+		if(null != response) {
+			
+			Resource resource = new ByteArrayResource(response);
+			
+			Arquivo arquivo = this.repository.getArquivoByID(arquivoID);
+			String contentType = arquivo.getTipo();
+			
+			log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", "contentType: "+contentType));
+			return new DadosArquivo(resource, contentType);
+		}
+		
+		return null;
 	}
 
 

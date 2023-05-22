@@ -33,20 +33,22 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 		try {
 			
 			String token = recuperarTokenJWT(request);
-			String subject = this.authenticationService.getSubject(token);
-			
-			log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "token: "+token));
-			log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "subject: "+subject));			
-			
-			User agent = this.authenticationService.getUsuarioByUsername(subject);
-			Long cdCustomer = getCustomer(request);
-			
-			if(cdCustomer == agent.getCustomer().getId()) {
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(agent,null, agent.getAuthorities());
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+			if(null != token) {				
+				String subject = this.authenticationService.getSubject(token);
 				
-			}else {
-				log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "Dentista sem acesso ao customer."));						
+				log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "token: "+token));
+				log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "subject: "+subject));			
+				
+				User agent = this.authenticationService.getUsuarioByUsername(subject);
+				Long cdCustomer = getCustomer(request);
+				
+				if(cdCustomer == agent.getCustomer().getId()) {
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(agent,null, agent.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+					
+				}else {
+					log.info(String.format(LogUtil.FORMATLOG, "doFilterInternal", request.getRequestURI(), "Dentista sem acesso ao customer."));						
+				}
 			}
 							
 			

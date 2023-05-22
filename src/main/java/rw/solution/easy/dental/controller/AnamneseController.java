@@ -40,7 +40,7 @@ public class AnamneseController implements Serializable {
 	@Autowired
 	private AnamneseService service;
 	
-	@Operation(summary = "Recupera o paciente pelo ID")
+	@Operation(summary = "Recupera a anamnese pelo pacienteID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<DadosAnamnese> getAnamneseByPacienteID(@PathVariable(required=true) Long customer,
 													 			 @RequestParam(required=true) Long pacienteId) {

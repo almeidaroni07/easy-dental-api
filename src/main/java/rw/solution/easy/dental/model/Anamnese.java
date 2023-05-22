@@ -82,6 +82,7 @@ public class Anamnese implements Serializable {
 	
 	
 	public Anamnese(DadosAnamnese dados, Paciente paciente) {
+		this.paciente = paciente;
 		this.alergicoMedicamento = dados.alergicoMedicamento();
 		this.alergicoMedicamentoQual = dados.alergicoMedicamentoQual();
 		this.usaMedicamento = dados.usaMedicamento();

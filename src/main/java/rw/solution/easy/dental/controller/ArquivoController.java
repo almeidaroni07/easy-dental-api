@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import rw.solution.easy.dental.model.Arquivo;
 import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.record.DadosArquivo;
 import rw.solution.easy.dental.service.ArquivoService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -196,30 +196,15 @@ public class ArquivoController implements Serializable {
 	   										   HttpServletRequest request) {
 		
 		try {
-			byte[] response = this.service.getArquivo(customer, arquivoID);
 			
-			if(null != response) {
-				
-				Resource resource = new ByteArrayResource(response);
-				
-				String contentType = null;
-				
-				try {
-					contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-				} catch (Exception e) {
-				}
-				
-				if(null == contentType) {
-					contentType = "application/octet-stream";
-				}
-				
-				log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", " Response HTTP OK"));
-				return ResponseEntity.status(HttpStatus.OK)
-									 .contentType(MediaType.parseMediaType(contentType))
-									 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+resource.getFilename()+"\"")
-									 .body(resource);
-			}			
+			DadosArquivo downloadFile = this.service.downloadArquivo(customer, arquivoID, request);
 			
+			log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", " Response HTTP OK"));
+			return ResponseEntity.status(HttpStatus.OK)
+								 .contentType(MediaType.parseMediaType(downloadFile.contentType()))
+								 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+downloadFile.resource().getFilename()+"\"")
+								 .body(downloadFile.resource());
+	
 		} catch (Exception e) {
 			log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", " Error"+ e.getMessage()));
 			e.printStackTrace();

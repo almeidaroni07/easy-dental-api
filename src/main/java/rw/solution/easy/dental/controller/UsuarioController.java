@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +45,9 @@ public class UsuarioController implements Serializable {
 	
 	@Autowired
 	private UserService service;
+	
+	@Autowired
+	private ResourceLoader reourceLouder;
 	
 	@Operation(summary = "Recupera o usuário pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -118,6 +122,7 @@ public class UsuarioController implements Serializable {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	@Operation(summary = "Recupera a foto do usuario")
 	@GetMapping(value = "/foto/{customer}")
 	public ResponseEntity<Resource> getFoto(@PathVariable(required=true) Long customer,
@@ -128,27 +133,32 @@ public class UsuarioController implements Serializable {
 			byte[] response = this.service.getFoto(customer, usuarioID);
 			
 			log.info(String.format(LogUtil.FORMATLOG, "UsuarioController", "getFoto", "byte[]: "+response));
+			Resource resource = null;
 			if(null != response) {
+				resource = new ByteArrayResource(response);
 				
-				Resource resource = new ByteArrayResource(response);
+			}else {
+				String location = "classpath:static/assets/img/fotoDefault.jpg";
+				resource = this.reourceLouder.getResource(location);
+			}
 				
-				String contentType = null;
-				
-				try {
-					contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-				} catch (Exception e) {
-				}
-				
-				if(null == contentType) {
-					contentType = "application/octet-stream";
-				}
-				
-				log.info(String.format(LogUtil.FORMATLOG, "UsuarioController", "getFoto", " Response HTTP OK"));
-				return ResponseEntity.status(HttpStatus.OK)
-									 .contentType(MediaType.parseMediaType(contentType))
-									 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+resource.getFilename()+"\"")
-									 .body(resource);
-			}			
+			String contentType = null;
+			
+			try {
+				contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+			} catch (Exception e) {
+			}
+			
+			if(null == contentType) {
+				contentType = "application/octet-stream";
+			}
+			
+			log.info(String.format(LogUtil.FORMATLOG, "UsuarioController", "getFoto", " Response HTTP OK"));
+			return ResponseEntity.status(HttpStatus.OK)
+								 .contentType(MediaType.parseMediaType(contentType))
+								 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+resource.getFilename()+"\"")
+								 .body(resource);
+					
 			
 		} catch (Exception e) {
 			log.info(String.format(LogUtil.FORMATLOG, "UsuarioController", "getFoto", " Error"+ e.getMessage()));

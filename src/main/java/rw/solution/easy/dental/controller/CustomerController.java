@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,7 +43,9 @@ public class CustomerController implements Serializable {
 	
 	@Autowired
 	private CustomerService service;
-
+	
+	@Autowired
+	private ResourceLoader reourceLouder;
 
 	@Operation(summary = "Atualiza o blob da foto")
 	@PostMapping(value = "/logo/{customer}")
@@ -69,6 +72,7 @@ public class CustomerController implements Serializable {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	@Operation(summary = "Recupera a foto do usuario")
 	@GetMapping(value = "/logo/{customer}")
 	public ResponseEntity<Resource> getFoto(@PathVariable(required=true) Long customer,
@@ -78,27 +82,31 @@ public class CustomerController implements Serializable {
 			byte[] response = this.service.getLogo(customer);
 			
 			log.info(String.format(LogUtil.FORMATLOG, "CustomerController", "getLogo", "byte[]: "+response));
+			Resource resource = null;
 			if(null != response) {
-				
-				Resource resource = new ByteArrayResource(response);
+				resource = new ByteArrayResource(response);				
+			}else {
+				String location = "classpath:static/assets/img/logoDefault.png";
+				resource = this.reourceLouder.getResource(location);
+			}
 				
 				String contentType = null;
-				
-				try {
-					contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-				} catch (Exception e) {
-				}
-				
-				if(null == contentType) {
-					contentType = "application/octet-stream";
-				}
-				
-				log.info(String.format(LogUtil.FORMATLOG, "CustomerController", "getLogo", " Response HTTP OK"));
-				return ResponseEntity.status(HttpStatus.OK)
-									 .contentType(MediaType.parseMediaType(contentType))
-									 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+resource.getFilename()+"\"")
-									 .body(resource);
-			}			
+			
+			try {
+				contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+			} catch (Exception e) {
+			}
+			
+			if(null == contentType) {
+				contentType = "application/octet-stream";
+			}
+			
+			log.info(String.format(LogUtil.FORMATLOG, "CustomerController", "getLogo", " Response HTTP OK"));
+			return ResponseEntity.status(HttpStatus.OK)
+								 .contentType(MediaType.parseMediaType(contentType))
+								 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+resource.getFilename()+"\"")
+								 .body(resource);
+						
 			
 		} catch (Exception e) {
 			log.info(String.format(LogUtil.FORMATLOG, "CustomerController", "getLogo", " Error"+ e.getMessage()));
