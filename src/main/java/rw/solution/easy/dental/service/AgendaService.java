@@ -3,6 +3,7 @@ package rw.solution.easy.dental.service;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -10,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rw.solution.easy.dental.model.Agenda;
+import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.enums.StatusConsulta;
 import rw.solution.easy.dental.model.record.DadosAgenda;
 import rw.solution.easy.dental.model.record.DadosAgendamento;
+import rw.solution.easy.dental.model.record.DadosStatusAgendamento;
 import rw.solution.easy.dental.model.repository.AgendaRepository;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -46,6 +50,23 @@ public class AgendaService implements Serializable {
 		hoje.stream().forEach(agenda -> listAgendamentoHoje.add(new DadosAgendamento(agenda)));
 		
 		return new DadosAgenda(listAgendamentoDTO, listAgendamentoHoje);
+	}
+
+	public List<DadosStatusAgendamento> getStatusAgendamento(Long customer) {
+		
+		StatusConsulta[] values = StatusConsulta.values();
+		List<StatusConsulta> list = Arrays.asList(values);
+		
+		return list.stream().map(status -> new DadosStatusAgendamento(status.toString(), status.toString())).toList();
+	}
+
+	public Response updateStatusConsulta(Long customer, Long agendamentoID, DadosStatusAgendamento dados) {
+		
+		Agenda agenda = this.repository.getAgendaByID(agendamentoID);
+		agenda.atualizaStatusConsulta(dados);
+		this.repository.saveAndFlush(agenda);
+		
+		return new Response(true, "Status atualizado com sucesso");
 	}
 
 }

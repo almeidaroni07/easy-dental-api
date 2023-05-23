@@ -27,6 +27,7 @@ import rw.solution.easy.dental.model.convert.LocalDateConverter;
 import rw.solution.easy.dental.model.enums.StatusConsulta;
 import rw.solution.easy.dental.model.record.DadosAgendamentoCor;
 import rw.solution.easy.dental.model.record.DadosProcedimento;
+import rw.solution.easy.dental.model.record.DadosStatusAgendamento;
 import rw.solution.easy.dental.util.LogUtil;
 
 @Getter
@@ -115,6 +116,10 @@ public class Agenda implements Serializable {
 		this.horaFimConsulta = dados.fim();
 		this.status = StatusConsulta.MARCADO;
 		this.procedimento = procedimento;
+	}
+	
+	public void atualizaStatusConsulta(DadosStatusAgendamento dados) {
+		this.status = Enum.valueOf(StatusConsulta.class, dados.id());
 	}
 	
 	
