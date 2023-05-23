@@ -1,6 +1,9 @@
 package rw.solution.easy.dental.model;
 
+import java.io.IOException;
 import java.io.Serializable;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,11 +17,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rw.solution.easy.dental.model.record.DadosArquivoEntity;
 
 @Getter
 @Setter
@@ -53,5 +58,24 @@ public class Arquivo implements Serializable {
 	@Lob
 	@Column(name = "bl_arquivo", nullable = true)
 	private byte[] arquivo;
+	
+	public Arquivo(DadosArquivoEntity dados, Customer customer) {
+		this.customer = customer;
+		this.nome = dados.nome();
+	}
+	
+	public void atualizarInformacoes(@Valid DadosArquivoEntity dados) {
+		this.nome = dados.nome();
+	}
+
+	public void atualizarInformacoesArquivo(MultipartFile blob) {
+		try {
+			byte[] arquivoBytes = blob.getBytes();
+			this.arquivo = arquivoBytes;
+			this.tipo = blob.getContentType();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

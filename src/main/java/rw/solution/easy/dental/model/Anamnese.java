@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -83,6 +84,26 @@ public class Anamnese implements Serializable {
 	
 	public Anamnese(DadosAnamnese dados, Paciente paciente) {
 		this.paciente = paciente;
+		this.alergicoMedicamento = dados.alergicoMedicamento();
+		this.alergicoMedicamentoQual = dados.alergicoMedicamentoQual();
+		this.usaMedicamento = dados.usaMedicamento();
+		this.usaMedicamentoQual = dados.usaMedicamentoQual();
+		this.alergiaAnestesia = dados.alergiaAnestesia();
+		this.alergiaAnestesiaQual = dados.alergiaAnestesiaQual();
+		this.gravidaOuAmamentando = dados.gravidaOuAmamentando();
+		this.doencaCardioRespiratoria = dados.doencaCardioRespiratoria();
+		this.doencaCardioRespiratoriaQual = dados.doencaCardioRespiratoriaQual();	
+		this.doencaoTransmissivel = dados.doencaoTransmissivel();
+		this.doencaoTransmissivelQual = dados.doencaoTransmissivelQual();
+		this.diabetico = dados.diabetico();
+		this.hipertencaoArterial = dados.hipertencaoArterial();
+		this.hemorragico = dados.hemorragico();
+		this.cirurgia = dados.cirurgia();
+		this.cirurgiaQual = dados.cirurgiaQual();
+		this.informacaoAdicional = dados.informacaoAdicional();
+	}
+	
+	public void atualizarInformacoes(@Valid DadosAnamnese dados) {
 		this.alergicoMedicamento = dados.alergicoMedicamento();
 		this.alergicoMedicamentoQual = dados.alergicoMedicamentoQual();
 		this.usaMedicamento = dados.usaMedicamento();

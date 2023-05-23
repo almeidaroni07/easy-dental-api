@@ -15,6 +15,7 @@ import rw.solution.easy.dental.model.Arquivo;
 import rw.solution.easy.dental.model.Customer;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.model.record.DadosArquivo;
+import rw.solution.easy.dental.model.record.DadosArquivoEntity;
 import rw.solution.easy.dental.model.repository.ArquivoRepository;
 import rw.solution.easy.dental.model.repository.CustomerRepository;
 import rw.solution.easy.dental.util.LogUtil;
@@ -35,67 +36,69 @@ public class ArquivoService implements Serializable {
 	@Autowired
 	private CustomerRepository customerRepository;
 
-	public List<Arquivo> getArquivos(Long customer) throws Exception {
+	public List<DadosArquivoEntity> getArquivos(Long customer) {
 		log.info(String.format(LogUtil.FORMATLOG, "getArquivos", "arquivo", "Customer"+customer));
-		return this.repository.getArquivosByCustomer(customer);
+		List<Arquivo> listArquivo = this.repository.getArquivosByCustomer(customer);
+		return listArquivo.stream().map(arquivo -> new DadosArquivoEntity(arquivo)).toList();
+	}
+	
+	public DadosArquivoEntity getArquivoPorID(Long arquivoID) {
+		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivoPorID", "arquivoID: "+arquivoID));
+		Arquivo arquivo = this.repository.getArquivoByID(arquivoID);
+		return new DadosArquivoEntity(arquivo);
 	}
 
-	public Response save(Long customerID, Arquivo arquivo) throws Exception {
+	public Response save(Long customerID, DadosArquivoEntity dados) {
 
 		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "save", "customer: "+customerID));
 		Customer customer = this.customerRepository.getCustomerById(customerID);
 		
-		arquivo.setCustomer(customer);
+		Arquivo arquivo = new Arquivo(dados, customer);
 		Arquivo save = this.repository.save(arquivo);
 		
 		return new Response(true, "Arquivo adicionado com sucesso", save.getId());
 	}
 
-	public Response updateArquivo(Long customer, Long arquivoID, MultipartFile blob) throws Exception {
+	public Response update(Long customerID, Long arquivoID, DadosArquivoEntity dados) {
+		
+		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "update", "arquivoID: "+arquivoID));
+		Arquivo arquivo = this.repository.getArquivoByID(arquivoID);
+		arquivo.atualizarInformacoes(dados);
+		
+		this.repository.save(arquivo);
+		
+		return new Response(true, "Arquivo atualizado com sucesso", arquivoID);
+	}
+
+	public Response delete(Long customer, Long arquivoID) {
+		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "delete", "arquivoID: "+arquivoID));
+		 Arquivo arquivoByID = this.repository.getArquivoByID(arquivoID);
+		 this.repository.delete(arquivoByID);
+		return new Response(true, "Arquivo deletado com sucesso", arquivoID);
+	}
+	
+	
+	public Response updateArquivo(Long customer, Long arquivoID, MultipartFile blob) {
 		
 		
 		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "updateArquivo", "arquivoID: "+arquivoID));
 		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "updateArquivo", "tipo arquivo: "+blob.getContentType()));
 		Arquivo arquivo = this.repository.getArquivoByID(arquivoID);
-		byte[] arquivoBytes = blob.getBytes();
-		arquivo.setArquivo(arquivoBytes);
-		arquivo.setTipo(blob.getContentType());
+		arquivo.atualizarInformacoesArquivo(blob);
 		
 		this.repository.save(arquivo);
 		
 		return new Response(true, "Arquivo atualizado com sucesso.");
 	}
 
-	public byte[] getArquivo(Long customer, Long arquivoID) throws Exception {
+	
+	public byte[] getArquivo(Long customer, Long arquivoID) {
 		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivo", "arquivoID: "+arquivoID));
 		return this.repository.getArquivo(arquivoID);
 	}
 
-	public Response update(Long customerID, Long arquivoID, Arquivo arquivo) throws Exception {
-		
-		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "update", "arquivoID: "+arquivoID));
-		Arquivo arquivoUpdate = this.repository.getArquivoByID(arquivoID);
-		arquivoUpdate.setNome(arquivo.getNome());
-		
-		this.repository.save(arquivoUpdate);
-		
-		return new Response(true, "Arquivo atualizado com sucesso", arquivoID);
-	}
 
-	public Response delete(Long customer, Long arquivoID) throws Exception {
-		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "delete", "arquivoID: "+arquivoID));
-		 Arquivo arquivoByID = this.repository.getArquivoByID(arquivoID);
-		 this.repository.delete(arquivoByID);
-		return new Response(true, "Arquivo deletado com sucesso", arquivoID);
-	}
-
-	public Arquivo getArquivoPorID(Long arquivoID) throws Exception {
-		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivoPorID", "arquivoID: "+arquivoID));
-		return this.repository.getArquivoByID(arquivoID);
-	}
-
-
-	public DadosArquivo downloadArquivo(Long customer, Long arquivoID, HttpServletRequest request) throws Exception {
+	public DadosArquivo downloadArquivo(Long customer, Long arquivoID, HttpServletRequest request) {
 		byte[] response = this.getArquivo(customer, arquivoID);
 		log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", "Blob: "+response));
 		

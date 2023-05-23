@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import rw.solution.easy.dental.model.Anamnese;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.model.record.DadosAnamnese;
 import rw.solution.easy.dental.service.AnamneseService;
@@ -62,7 +61,7 @@ public class AnamneseController implements Serializable {
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updateAnamnese(@PathVariable(required=true) Long customer,
 											  	 @RequestParam(required=true) Long pacienteId,
-											  	 @RequestBody(required=true) Anamnese parameter) {
+											  	 @RequestBody(required=true) DadosAnamnese parameter) {
 	
 		try {
 			

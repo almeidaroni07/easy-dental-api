@@ -25,9 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import rw.solution.easy.dental.model.Arquivo;
 import rw.solution.easy.dental.model.Response;
 import rw.solution.easy.dental.model.record.DadosArquivo;
+import rw.solution.easy.dental.model.record.DadosArquivoEntity;
 import rw.solution.easy.dental.service.ArquivoService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -51,63 +51,39 @@ public class ArquivoController implements Serializable {
 	
 	@Operation(summary = "Recupera os arquivos cadastrados")
 	@GetMapping(value = "/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Arquivo>> getArquivos(@PathVariable(required=true) Long customer) {
+	public ResponseEntity<List<DadosArquivoEntity>> getArquivos(@PathVariable(required=true) Long customer) {
 		
-		try {
-			List<Arquivo> response = this.service.getArquivos(customer);
-			
-			log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivos", " Response HTTP OK "+response.size()));
-			return ResponseEntity.status(HttpStatus.OK).body(response);
-			
-		} catch (Exception e) {
-			log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivos", " Error"+ e.getMessage()));
-			e.printStackTrace();
-		}
+		List<DadosArquivoEntity> response = this.service.getArquivos(customer);
 		
-		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivos", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivos", " Response HTTP OK "+response.size()));
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@Operation(summary = "Recupera o arquivo pelo ID")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Arquivo> getArquivoPorID(@PathVariable(required=true) Long customer,
-													@RequestParam(required=true) Long arquivoID) {
-		try {
-			Arquivo response = this.service.getArquivoPorID(arquivoID);
-			log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivoPorID", " Response HTTP OK"));
-			return ResponseEntity.status(HttpStatus.OK).body(response);
-			
-		} catch (Exception e) {
-			log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivoPorID", " Error"+ e.getMessage()));
-			e.printStackTrace();
-		}
-		
-		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivoPorID", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	public ResponseEntity<DadosArquivoEntity> getArquivoPorID(@PathVariable(required=true) Long customer,
+															  @RequestParam(required=true) Long arquivoID) {
+
+		DadosArquivoEntity response = this.service.getArquivoPorID(arquivoID);
+		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "getArquivoPorID", " Response HTTP OK"));
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@Operation(summary = "Adiciona um arquivo")
 	@PostMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> save(@PathVariable(required=true) Long customer, 
-									   @RequestBody(required=true) Arquivo parameter) {
+									   @RequestBody(required=true) DadosArquivoEntity parameter) {
 	
-		try {
-			
-			Response response = this.service.save(customer, parameter);
-							
-			if(response.isSuccess()){				
-				log.info(String.format(LogUtil.FORMATLOG, "save", "arquivo", " Response HTTP OK"));
-				return ResponseEntity.status(HttpStatus.OK).body(String.valueOf(response.getCdResponse()));
-			}else{
-				log.info(String.format(LogUtil.FORMATLOG, "save", "arquivo", " Response HTTP BAD REQUEST"));
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
-			}
-		} catch (Exception e) {
-			log.error(String.format(LogUtil.FORMATLOG, "save", "arquivo", " Error"), e);
-			e.printStackTrace();
+		Response response = this.service.save(customer, parameter);
+						
+		if(response.isSuccess()){				
+			log.info(String.format(LogUtil.FORMATLOG, "save", "arquivo", " Response HTTP OK"));
+			return ResponseEntity.status(HttpStatus.OK).body(String.valueOf(response.getCdResponse()));
+		}else{
+			log.info(String.format(LogUtil.FORMATLOG, "save", "arquivo", " Response HTTP BAD REQUEST"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
 		}
-		log.info(String.format(LogUtil.FORMATLOG, "save", "arquivo", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
 	}
 	
 	
@@ -115,25 +91,17 @@ public class ArquivoController implements Serializable {
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> update(@PathVariable(required=true) Long customer, 
 									     @RequestParam(required=true) Long arquivoID,
-									     @RequestBody(required=true) Arquivo parameter) {
+									     @RequestBody(required=true) DadosArquivoEntity parameter) {
 	
-		try {
-			
-			Response response = this.service.update(customer, arquivoID, parameter);
-							
-			if(response.isSuccess()){				
-				log.info(String.format(LogUtil.FORMATLOG, "arquivo", "update", " Response HTTP OK"));
-				return ResponseEntity.status(HttpStatus.OK).body(String.valueOf(response.getCdResponse()));
-			}else{
-				log.info(String.format(LogUtil.FORMATLOG, "arquivo", "update", " Response HTTP BAD REQUEST"));
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
-			}
-		} catch (Exception e) {
-			log.error(String.format(LogUtil.FORMATLOG, "arquivo", "update", " Error"), e);
-			e.printStackTrace();
+		Response response = this.service.update(customer, arquivoID, parameter);
+						
+		if(response.isSuccess()){				
+			log.info(String.format(LogUtil.FORMATLOG, "arquivo", "update", " Response HTTP OK"));
+			return ResponseEntity.status(HttpStatus.OK).body(String.valueOf(response.getCdResponse()));
+		}else{
+			log.info(String.format(LogUtil.FORMATLOG, "arquivo", "update", " Response HTTP BAD REQUEST"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
 		}
-		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "update", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
 	
@@ -141,8 +109,6 @@ public class ArquivoController implements Serializable {
 	@DeleteMapping(value = "/{customer}")
 	public ResponseEntity<String> delete(@PathVariable(required=true) Long customer,
 										 @RequestParam(required=true) Long arquivoID) {
-	
-		try {
 			
 			Response response = this.service.delete(customer, arquivoID);
 							
@@ -153,12 +119,6 @@ public class ArquivoController implements Serializable {
 				log.info(String.format(LogUtil.FORMATLOG, "arquivo", "delete", " Response HTTP BAD REQUEST"));
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
 			}
-		} catch (Exception e) {
-			log.error(String.format(LogUtil.FORMATLOG, "arquivo", "delete", " Error"), e);
-			e.printStackTrace();
-		}
-		log.info(String.format(LogUtil.FORMATLOG, "arquivo", "delete", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
 	
@@ -169,23 +129,16 @@ public class ArquivoController implements Serializable {
 				  	 						   @RequestParam(required=true) Long arquivoID, 
 											   @RequestBody(required=true) MultipartFile arquivo) {
 	
-		try {
-			
-			Response response = this.service.updateArquivo(customer, arquivoID, arquivo);
-							
-			if(response.isSuccess()){				
-				log.info(String.format(LogUtil.FORMATLOG, "updateArquivo", "arquivo", " Response HTTP OK"));
-				return ResponseEntity.status(HttpStatus.OK).body("OK");
-			}else{
-				log.info(String.format(LogUtil.FORMATLOG, "updateArquivo", "arquivo", " Response HTTP BAD REQUEST"));
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
-			}
-		} catch (Exception e) {
-			log.error(String.format(LogUtil.FORMATLOG, "updateArquivo", "arquivo", " Error"), e);
-			e.printStackTrace();
+		Response response = this.service.updateArquivo(customer, arquivoID, arquivo);
+						
+		if(response.isSuccess()){				
+			log.info(String.format(LogUtil.FORMATLOG, "updateArquivo", "arquivo", " Response HTTP OK"));
+			return ResponseEntity.status(HttpStatus.OK).body("OK");
+		}else{
+			log.info(String.format(LogUtil.FORMATLOG, "updateArquivo", "arquivo", " Response HTTP BAD REQUEST"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
 		}
-		log.info(String.format(LogUtil.FORMATLOG, "updateArquivo", "arquivo", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
 	}
 	
 	
@@ -194,24 +147,14 @@ public class ArquivoController implements Serializable {
 	public ResponseEntity<Resource> getArquivo(@PathVariable(required=true) Long customer,
 	   										   @RequestParam(required=true) Long arquivoID,
 	   										   HttpServletRequest request) {
+
+		DadosArquivo downloadFile = this.service.downloadArquivo(customer, arquivoID, request);
 		
-		try {
-			
-			DadosArquivo downloadFile = this.service.downloadArquivo(customer, arquivoID, request);
-			
-			log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", " Response HTTP OK"));
-			return ResponseEntity.status(HttpStatus.OK)
-								 .contentType(MediaType.parseMediaType(downloadFile.contentType()))
-								 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+downloadFile.resource().getFilename()+"\"")
-								 .body(downloadFile.resource());
-	
-		} catch (Exception e) {
-			log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", " Error"+ e.getMessage()));
-			e.printStackTrace();
-		}
-		
-		log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		log.info(String.format(LogUtil.FORMATLOG, "getArquivo", "arquivo", " Response HTTP OK"));
+		return ResponseEntity.status(HttpStatus.OK)
+							 .contentType(MediaType.parseMediaType(downloadFile.contentType()))
+							 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+downloadFile.resource().getFilename()+"\"")
+							 .body(downloadFile.resource());
 	}
 	
 }
