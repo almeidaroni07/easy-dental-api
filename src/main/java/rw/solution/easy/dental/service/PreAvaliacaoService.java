@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import rw.solution.easy.dental.model.PreAvaliacao;
 import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.record.DadosPreAvaliacao;
 import rw.solution.easy.dental.model.repository.PreAvaliacaoRepository;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -24,13 +25,19 @@ public class PreAvaliacaoService implements Serializable {
 	@Autowired
 	private PreAvaliacaoRepository repository;
 	
-	public PreAvaliacao getPreAvaliacaoByPacienteID(Long pacienteId) throws Exception {
-		log.info(String.format(LogUtil.FORMATLOG, "getPreAvaliacaoByPacienteID", "paciente", " Buscando a pre avaliacao do paciente: "+pacienteId));
-		return this.repository.getPreAvaliacaoByPacienteID(pacienteId);
+	public DadosPreAvaliacao getPreAvaliacaoByPacienteID(Long pacienteId) {
+		log.info(String.format(LogUtil.FORMATLOG, "paciente", "getPreAvaliacaoByPacienteID", " Buscando a pre avaliacao do paciente: "+pacienteId));
+		PreAvaliacao preAvaliacao = this.repository.getPreAvaliacaoByPacienteID(pacienteId);
+		return new DadosPreAvaliacao(preAvaliacao);
 	}
 	
-	public Response updatePreAvaliacao(Long customerID, Long pacienteId, PreAvaliacao pre) throws Exception{
-		this.repository.save(pre);
+	public Response updatePreAvaliacao(Long customerID, Long pacienteId, DadosPreAvaliacao dados){
+		
+		log.info(String.format(LogUtil.FORMATLOG, "paciente", "updatePreAvaliacao", " Buscando a pre avaliacao do paciente: "+pacienteId));
+		PreAvaliacao pre = this.repository.getPreAvaliacaoByPacienteID(pacienteId);
+		pre.atualizaInformacoes(dados);
+		
+		this.repository.saveAndFlush(pre);
 		return new Response(true, "Pre avaliacao Atualizada com sucesso");
 	}
 	

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import rw.solution.easy.dental.model.PreAvaliacao;
 import rw.solution.easy.dental.model.Response;
+import rw.solution.easy.dental.model.record.DadosPreAvaliacao;
 import rw.solution.easy.dental.service.PreAvaliacaoService;
 import rw.solution.easy.dental.util.LogUtil;
 
@@ -41,45 +41,31 @@ public class PreAvaliacaoController implements Serializable  {
 	
 	@Operation(summary = "Recupera a pré avaliação de um paciente")
 	@GetMapping(value = "/id/{customer}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PreAvaliacao> getPreAvaliacaoByPacienteID(@PathVariable(required=true) Long customer,
-													 				@RequestParam(required=true) Long pacienteId) {
-		try {
-			PreAvaliacao response = this.service.getPreAvaliacaoByPacienteID(pacienteId);
+	public ResponseEntity<DadosPreAvaliacao> getPreAvaliacaoByPacienteID(@PathVariable(required=true) Long customer,
+													 					 @RequestParam(required=true) Long pacienteId) {
+		
+			DadosPreAvaliacao response = this.service.getPreAvaliacaoByPacienteID(pacienteId);
 			log.info(String.format(LogUtil.FORMATLOG, "getPreAvaliacaoByPacienteID", "paciente", " Response HTTP OK"));
 			return ResponseEntity.status(HttpStatus.OK).body(response);
-			
-		} catch (Exception e) {
-			log.info(String.format(LogUtil.FORMATLOG, "getPreAvaliacaoByPacienteID", "paciente", " Error"+ e.getMessage()));
-			e.printStackTrace();
-		}
-		
-		log.info(String.format(LogUtil.FORMATLOG, "getPreAvaliacaoByPacienteID", "paciente", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
 	}
 	
 	@Operation(summary = "Atualiza a pre avaliacao de um paciente")
 	@PutMapping(value = "/{customer}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> updatePreAvaliacao(@PathVariable(required=true) Long customer,
 											  	 	 @RequestParam(required=true) Long pacienteId,
-											  	 	 @RequestBody(required=true) PreAvaliacao parameter) {
-	
-		try {
-			
-			Response response = this.service.updatePreAvaliacao(customer, pacienteId, parameter);
-							
-			if(response.isSuccess()){				
-				log.info(String.format(LogUtil.FORMATLOG, "updatePreAvaliacao", "paciente", " Response HTTP OK"));
-				return ResponseEntity.status(HttpStatus.OK).body(response.getMessage());
-			}else{
-				log.info(String.format(LogUtil.FORMATLOG, "updatePreAvaliacao", "paciente", " Response HTTP BAD REQUEST"));
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
-			}
-		} catch (Exception e) {
-			log.error(String.format(LogUtil.FORMATLOG, "updatePreAvaliacao", "paciente", " Error"), e);
-			e.printStackTrace();
+											  	 	 @RequestBody(required=true) DadosPreAvaliacao parameter) {
+		
+		Response response = this.service.updatePreAvaliacao(customer, pacienteId, parameter);
+						
+		if(response.isSuccess()){				
+			log.info(String.format(LogUtil.FORMATLOG, "updatePreAvaliacao", "paciente", " Response HTTP OK"));
+			return ResponseEntity.status(HttpStatus.OK).body(response.getMessage());
+		}else{
+			log.info(String.format(LogUtil.FORMATLOG, "updatePreAvaliacao", "paciente", " Response HTTP BAD REQUEST"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
 		}
-		log.info(String.format(LogUtil.FORMATLOG, "updatePreAvaliacao", "paciente", " Response HTTP INTERNAL SERVER ERROR"));
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
 	}
 
 }

@@ -69,5 +69,15 @@ public class PreAvaliacao implements Serializable {
 		this.queixa = dados.queixa();
 	}
 
+	public void atualizaInformacoes(DadosPreAvaliacao dados) {
+		this.corDentesIncomoda = dados.corDentesIncomoda();
+		this.formatoDentesIncomoda = dados.formatoDentesIncomoda();
+		this.fumante = dados.fumante();
+		this.umAnoTratamento = dados.umAnoTratamento();
+		this.escovaDuasVezesDia = dados.escovaDuasVezesDia();
+		this.usaFioDental = dados.usaFioDental();
+		this.queixa = dados.queixa();
+	}
+
 	
 }
