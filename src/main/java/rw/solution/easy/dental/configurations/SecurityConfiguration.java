@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import rw.solution.easy.dental.security.filter.AuthenticationFilter;
+import rw.solution.easy.dental.filter.AuthenticationFilter;
 
 
 @EnableWebSecurity
@@ -38,7 +38,7 @@ public class SecurityConfiguration {
 			   .requestMatchers(HttpMethod.GET, "/arquivo/v1/blob/**").permitAll()
 			   .requestMatchers(HttpMethod.GET, "/usuario/v1/foto/**").permitAll()
 			   .requestMatchers(HttpMethod.GET, "/customer/v1/logo/**").permitAll()
-			   .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+			   .requestMatchers(HttpMethod.POST, "/autenticacao/login").permitAll()
 			   .requestMatchers(HttpMethod.GET, "/keepalive/status").permitAll()
 			   .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
 			   .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()

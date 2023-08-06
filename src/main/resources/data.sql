@@ -1,3 +1,1 @@
-insert into customer (nome, status, bl_logo) values ('Thais', 'ATIVO', null);
-insert into usuario (customer_id, nome, username, password, status, bl_foto) values (1, 'thais', 'thaissouzaff@gmail.com', '$2a$10$pdSkFCsNjW6Y5RogDkY0auZnpazwdPHNVElgPO2MUICLYkV/9dw6i', 'ATIVO', null);
-
+insert into usuario (nome, username, password, status, bl_foto) values ('thais', 'thaissouzaff@gmail.com', '$2a$10$PvmWHRHefnU.2C43fHG6F.vbAjaOsHo9WHKVa6QUxD1AGuxGb2IAm', 'ATIVO', null);
